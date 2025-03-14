@@ -11,7 +11,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to Faunary!"
+        android:text="@string/intro_text"
         app:layout_constraintBottom_toTopOf="@id/btnTest"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -26,6 +26,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView"
-        android:text="Click here" />
+        android:text="@string/button_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

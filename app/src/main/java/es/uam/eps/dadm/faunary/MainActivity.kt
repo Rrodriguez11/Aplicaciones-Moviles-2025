@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         val btnTest = findViewById<Button>(R.id.btnTest)
 
         btnTest.setOnClickListener {
-            textView.text = "Button was clicked"
+            textView.text = resources.getString(R.string.button_result_text)
         }
     }
 }

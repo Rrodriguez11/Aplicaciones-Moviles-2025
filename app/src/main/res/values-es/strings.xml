@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intro_text">Bienvenido a Faunary</string>
+    <string name="button_text">Pulsa Aquí</string>
+    <string name="button_result_text">El botón fue pulsado</string>
+</resources>

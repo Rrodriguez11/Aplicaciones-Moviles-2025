@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Faunary</string>
+    <string name="app_name" translatable="false">Faunary</string>
+    <string name="intro_text">Welcome to Faunary!</string>
+    <string name="button_text">Click Here</string>
+    <string name="button_result_text">Button was clicked</string>
 </resources>
