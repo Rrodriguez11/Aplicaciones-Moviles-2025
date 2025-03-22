@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name" translatable="false">Faunary</string>
     <string name="intro_text">Welcome to Faunary!</string>
-    <string name="button_text">Click Here</string>
+    <string name="button_text">Habitats</string>
     <string name="button_result_text">Button was clicked</string>
 </resources>
