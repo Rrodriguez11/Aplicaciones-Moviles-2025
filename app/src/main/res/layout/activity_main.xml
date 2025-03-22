@@ -10,82 +10,71 @@
         android:layout_height="match_parent"
         android:background="@color/fau_green">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="200dp"
-            android:layout_height="208dp"
-            android:layout_marginTop="55dp"
-            android:src="@drawable/logo_faunary_giraffe"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/separator"
-            android:layout_width="300dp"
-            android:layout_height="4dp"
-            android:background="@color/fau_brown"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/logo"
+        <include
+            android:id="@+id/headerLayout"
+            layout="@layout/header_faunary"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/intro_text"
-            android:textSize="24sp"
-            app:layout_constraintTop_toBottomOf="@id/separator"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Texto en entorno"
-            android:layout_marginTop="28dp" />
-
-        <Button
-            android:id="@+id/btnTest"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/carter_one"
-            android:scaleX="2"
-            android:scaleY="2"
-            android:text="@string/button_text"
-            app:icon="@android:drawable/btn_star_big_on"
-            app:iconTint="#fdac38"
-            app:layout_constraintTop_toBottomOf="@id/textView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="48dp" />
-
-        <ImageView
-            android:id="@+id/footerGrassLeft"
-            android:layout_width="225dp"
-            android:layout_height="195dp"
-            android:src="@drawable/footer_grass"
+        <include
+            android:id="@+id/footerLayout"
+            layout="@layout/footer_grass"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="-10dp" />
-
-        <ImageView
-            android:id="@+id/footerGrassRight"
-            android:layout_width="225dp"
-            android:layout_height="195dp"
-            android:src="@drawable/footer_grass"
-            android:scaleX="-1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="-10dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/footerLogo"
             android:layout_width="300dp"
-            android:layout_height="130dp"
+            android:layout_height="70dp"
             android:src="@drawable/logo_faunary_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="-25dp"/>
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ScrollView
+            android:id="@+id/scrollContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:scrollbarThumbVertical="@drawable/custom_scroll_thumb"
+            android:scrollbarTrackVertical="@drawable/custom_scroll_track"
+            android:paddingEnd="12dp"
+            android:clipToPadding="false"
+            app:layout_constraintBottom_toTopOf="@id/footerLogo"
+            app:layout_constraintTop_toBottomOf="@id/headerLayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/intro_text"
+                    android:textSize="24sp"
+                    tools:text="Texto en entorno" />
+
+                <Button
+                    android:id="@+id/btnTest"
+                    style="@style/Widget.AppCompat.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:fontFamily="@font/carter_one"
+                    android:scaleX="2"
+                    android:scaleY="2"
+                    android:text="@string/button_text"
+                    app:icon="@android:drawable/btn_star_big_on"
+                    app:iconTint="#fdac38" />
+
+            </LinearLayout>
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
