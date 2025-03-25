@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
                     android:fontFamily="@font/carter_one"
-                    android:text="Koalas"
+                    android:text="@string/lion_name"
                     android:textSize="30sp"
                     tools:text="Texto en entorno" />
             </LinearLayout>

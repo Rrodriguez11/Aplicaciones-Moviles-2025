@@ -4,4 +4,5 @@
     <string name="intro_text">Welcome to Faunary!</string>
     <string name="button_text">Habitats</string>
     <string name="button_result_text">Button was clicked</string>
+    <string name="lion_name">Lions</string>
 </resources>
