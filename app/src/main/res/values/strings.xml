@@ -5,4 +5,14 @@
     <string name="button_text">Habitats</string>
     <string name="button_result_text">Button was clicked</string>
     <string name="lion_name">Lions</string>
+    <string name="clean_button">Clean Habitat</string>
+    <string name="cleaning_title">Cleaning:</string>
+    <string name="animals_title">Animals:</string>
+    <string name="fed_animals">Fed: %1$d/%2$d</string>
+    <string name="medicated_animals">Medicated: %1$d/%2$d</string>
+    <string name="food_text">Food: %1$s</string>
+    <string name="meat">Meat</string>
+    <string name="clean_delay">Overdue: %1$d days</string>
+    <string name="clean_next">Next: %1$d days</string>
+    <string name="clean_success_toast">Cleaning completed!</string>
 </resources>

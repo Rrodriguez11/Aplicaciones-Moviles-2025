@@ -47,7 +47,6 @@
             android:fillViewport="true"
             android:scrollbarThumbVertical="@drawable/custom_scroll_thumb"
             android:scrollbarTrackVertical="@drawable/custom_scroll_track"
-            android:paddingEnd="12dp"
             android:clipToPadding="false"
             app:layout_constraintBottom_toTopOf="@id/footerLogo"
             app:layout_constraintTop_toBottomOf="@id/headerLayout">
@@ -63,7 +62,6 @@
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="28dp"
                     android:fontFamily="@font/carter_one"
                     android:text="@string/lion_name"
                     android:textSize="50sp"
@@ -95,7 +93,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Limpieza:"
+                            android:text="@string/cleaning_title"
                             android:textSize="35sp"
                             android:textColor="@color/fau_brown"
                             android:fontFamily="@font/carter_one" />
@@ -104,9 +102,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-10dp"
-                            android:text="Siguiente en: 4 días"
+                            android:text="@{viewModel.cleaningLabel}"
                             android:textSize="18sp"
-                            android:textColor="@color/fau_brown"
+                            android:textColor="@{viewModel.cleaningDone ? @color/fau_brown : @android:color/holo_red_dark}"
                             android:fontFamily="@font/carter_one" />
 
                     </LinearLayout>
@@ -124,11 +122,19 @@
                     android:id="@+id/cleaningButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Realizar limpieza"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="-18dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/carter_one"
                     android:onClick="@{() -> viewModel.markCleaningDone()}"
+                    android:text="@string/clean_button"
+                    android:textColor="@color/fau_brown"
                     android:visibility="@{viewModel.cleaningDone ? View.GONE : View.VISIBLE}"
-                    android:layout_gravity="center_horizontal" />
+                    app:backgroundTint="@color/fau_yellow"
+                    app:icon="@android:drawable/ic_popup_sync"
+                    app:iconTint="@color/fau_brown"
+                    app:strokeColor="@color/fau_brown"
+                    app:strokeWidth="4dp" />
 
                 <!-- Animals -->
                 <LinearLayout
@@ -155,7 +161,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Animales:"
+                            android:text="@string/animals_title"
                             android:textSize="35sp"
                             android:textColor="@color/fau_brown"
                             android:fontFamily="@font/carter_one" />
@@ -164,7 +170,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-10dp"
-                            android:text="Alimento: Carne"
+                            android:text="@{String.format(@string/food_text, @string/meat)}"
                             android:textSize="18sp"
                             android:textColor="@color/fau_brown"
                             android:fontFamily="@font/carter_one" />
@@ -230,7 +236,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Alimentados: 11/12"
+                            android:text="@{String.format(@string/fed_animals, viewModel.fedCount, viewModel.totalCount)}"
                             android:textColor="@android:color/holo_red_dark"
                             android:textSize="18sp"
                             android:fontFamily="@font/carter_one"/>
@@ -238,7 +244,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Medicados: 3/3"
+                            android:text="@{String.format(@string/medicated_animals, viewModel.medicatedCount, viewModel.sickCount)}"
                             android:textColor="@color/fau_brown"
                             android:textSize="18sp"
                             android:fontFamily="@font/carter_one"

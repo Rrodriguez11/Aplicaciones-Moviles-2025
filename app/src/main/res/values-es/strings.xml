@@ -4,4 +4,14 @@
     <string name="button_text">Recintos</string>
     <string name="button_result_text">El botón fue pulsado</string>
     <string name="lion_name">Leones</string>
+    <string name="clean_button">Limpiar Recinto</string>
+    <string name="cleaning_title">Limpieza:</string>
+    <string name="animals_title">Animales:</string>
+    <string name="fed_animals">Alimentados: %1$d/%2$d</string>
+    <string name="medicated_animals">Medicados: %1$d/%2$d</string>
+    <string name="food_text">Alimento: %1$s</string>
+    <string name="meat">Carne</string>
+    <string name="clean_delay">Retraso: %1$d días</string>
+    <string name="clean_next">Siguiente: %1$d días</string>
+    <string name="clean_success_toast">¡Limpieza completada!</string>
 </resources>

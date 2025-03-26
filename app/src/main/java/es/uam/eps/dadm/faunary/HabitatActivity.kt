@@ -9,6 +9,8 @@ import androidx.databinding.DataBindingUtil
 import es.uam.eps.dadm.faunary.databinding.ActivityHabitatBinding
 import es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel
 
+import android.widget.Toast
+
 class HabitatActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHabitatBinding
@@ -23,5 +25,12 @@ class HabitatActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(HabitatViewModel::class.java)
         binding.viewModel = viewModel
+
+        viewModel.showCleaningToast.observe(this) { show ->
+            if (show == true) {
+                Toast.makeText(this, R.string.clean_success_toast, Toast.LENGTH_SHORT).show()
+                viewModel.resetCleaningToast()
+            }
+        }
     }
 }
