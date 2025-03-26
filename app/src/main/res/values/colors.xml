@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="fau_yellow">#FDAC38</color>
+    <color name="fau_yellow_strong">#FF9C0E</color>
     <color name="fau_green">#BDF18D</color>
     <color name="fau_brown">#49270A</color>
 </resources>

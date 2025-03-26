@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".HabitatActivity">
 
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -45,6 +52,7 @@
             app:layout_constraintBottom_toTopOf="@id/footerLogo"
             app:layout_constraintTop_toBottomOf="@id/headerLayout">
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,8 +66,187 @@
                     android:layout_marginTop="28dp"
                     android:fontFamily="@font/carter_one"
                     android:text="@string/lion_name"
-                    android:textSize="30sp"
-                    tools:text="Texto en entorno" />
+                    android:textSize="50sp"
+                    android:textColor="@color/fau_yellow_strong"
+                    tools:text="Animal" />
+
+                <!-- Cleaning -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-20dp"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="88dp"
+                        android:layout_height="88dp"
+                        android:src="@drawable/ic_clean"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Limpieza:"
+                            android:textSize="35sp"
+                            android:textColor="@color/fau_brown"
+                            android:fontFamily="@font/carter_one" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-10dp"
+                            android:text="Siguiente en: 4 días"
+                            android:textSize="18sp"
+                            android:textColor="@color/fau_brown"
+                            android:fontFamily="@font/carter_one" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:paddingRight="6dp"
+                        android:paddingBottom="3dp"
+                        android:src="@{viewModel.cleaningDone ? @drawable/ic_check : @drawable/ic_cross}"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/cleaningButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Realizar limpieza"
+                    android:layout_marginTop="-18dp"
+                    android:onClick="@{() -> viewModel.markCleaningDone()}"
+                    android:visibility="@{viewModel.cleaningDone ? View.GONE : View.VISIBLE}"
+                    android:layout_gravity="center_horizontal" />
+
+                <!-- Animals -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-20dp"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="88dp"
+                        android:layout_height="88dp"
+                        android:src="@drawable/ic_animal"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Animales:"
+                            android:textSize="35sp"
+                            android:textColor="@color/fau_brown"
+                            android:fontFamily="@font/carter_one" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-10dp"
+                            android:text="Alimento: Carne"
+                            android:textSize="18sp"
+                            android:textColor="@color/fau_brown"
+                            android:fontFamily="@font/carter_one" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_cross"
+                        android:paddingRight="6dp"
+                        android:paddingBottom="3dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="-15dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp">
+
+                        <View
+                            android:id="@+id/linea"
+                            android:layout_width="5dp"
+                            android:layout_height="0dp"
+                            android:background="@color/fau_brown"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/food_icon"
+                            app:layout_constraintBottom_toBottomOf="@id/health_icon" />
+
+                        <ImageView
+                            android:id="@+id/food_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_food"
+                            app:layout_constraintStart_toEndOf="@id/linea"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginStart="15dp" />
+
+                        <ImageView
+                            android:id="@+id/health_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_health"
+                            app:layout_constraintStart_toEndOf="@id/linea"
+                            app:layout_constraintTop_toBottomOf="@id/food_icon"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="-5dp"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="5dp"
+                        android:paddingTop="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Alimentados: 11/12"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textSize="18sp"
+                            android:fontFamily="@font/carter_one"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Medicados: 3/3"
+                            android:textColor="@color/fau_brown"
+                            android:textSize="18sp"
+                            android:fontFamily="@font/carter_one"
+                            android:layout_marginTop="6dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+
             </LinearLayout>
 
         </ScrollView>
