@@ -4,9 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
 import es.uam.eps.dadm.faunary.R
+import timber.log.Timber
 
 class HabitatViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -28,6 +27,7 @@ class HabitatViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         updateCleaningLabel()
+        Timber.i("HabitatViewModel created")
     }
 
     private fun updateCleaningLabel() {
@@ -45,6 +45,7 @@ class HabitatViewModel(application: Application) : AndroidViewModel(application)
         _cleaningDone.value = true
         _showCleaningToast.value = true
         updateCleaningLabel()
+        Timber.i("Habitat was cleaned successfully")
     }
 
     fun resetCleaningToast() {
