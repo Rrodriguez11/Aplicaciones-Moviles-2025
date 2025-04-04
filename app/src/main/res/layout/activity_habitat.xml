@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout para HabitatActivity de la app Faunary.
+    Incluye:
+    - Enlace a ViewModel (con LiveData para actualizar dinámicamente).
+    - Cabecera reutilizable con navegación.
+    - Footer decorativo con césped y logo.
+    - Contenido principal dentro de un ScrollView:
+        - Información de limpieza.
+        - Información sobre animales y salud.
+-->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".HabitatActivity">
 
+    <!-- ViewModel para DataBinding -->
     <data>
         <import type="android.view.View" />
         <variable
@@ -11,12 +22,14 @@
             type="es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel" />
     </data>
 
+    <!-- Contenedor principal -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/faunary_app_bg">
 
+        <!-- Cabecera con navegación y logo -->
         <include
             android:id="@+id/headerLayout"
             layout="@layout/header_faunary"
@@ -24,6 +37,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Footer con césped -->
         <include
             android:id="@+id/footerLayout"
             layout="@layout/footer_grass"
@@ -31,6 +45,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Logo de Faunary sobre el footer -->
         <ImageView
             android:id="@+id/footerLogo"
             android:layout_width="300dp"
@@ -40,6 +55,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <!-- Contenido principal scrollable -->
         <ScrollView
             android:id="@+id/scrollContainer"
             android:layout_width="match_parent"
@@ -58,6 +74,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
+                <!-- Nombre del hábitat/animal -->
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
@@ -68,7 +85,7 @@
                     android:textColor="@color/fau_yellow_strong"
                     tools:text="Animal" />
 
-                <!-- Cleaning -->
+                <!-- Sección: Limpieza -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -77,6 +94,7 @@
                     android:padding="12dp"
                     android:gravity="center_vertical">
 
+                    <!-- Icono -->
                     <ImageView
                         android:layout_width="88dp"
                         android:layout_height="88dp"
@@ -84,6 +102,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"/>
 
+                    <!-- Texto descriptivo y estado -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -98,6 +117,7 @@
                             android:textColor="@color/fau_brown"
                             android:fontFamily="@font/carter_one" />
 
+                        <!-- Texto dinámico con LiveData -->
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -109,6 +129,7 @@
 
                     </LinearLayout>
 
+                    <!-- Icono dinámico (check/cross) -->
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
@@ -118,6 +139,7 @@
 
                 </LinearLayout>
 
+                <!-- Botón para realizar limpieza -->
                 <Button
                     android:id="@+id/cleaningButton"
                     android:layout_width="wrap_content"
@@ -136,7 +158,7 @@
                     app:strokeColor="@color/fau_brown"
                     app:strokeWidth="4dp" />
 
-                <!-- Animals -->
+                <!-- Sección: Animales -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -166,6 +188,7 @@
                             android:textColor="@color/fau_brown"
                             android:fontFamily="@font/carter_one" />
 
+                        <!-- Texto dinámico con tipo de comida -->
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -184,6 +207,7 @@
                         android:paddingBottom="3dp"/>
                 </LinearLayout>
 
+                <!-- Línea vertical con iconos a la derecha -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -196,6 +220,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="40dp">
 
+                        <!-- Línea marrón vertical -->
                         <View
                             android:id="@+id/linea"
                             android:layout_width="5dp"
@@ -205,6 +230,7 @@
                             app:layout_constraintTop_toTopOf="@id/food_icon"
                             app:layout_constraintBottom_toBottomOf="@id/health_icon" />
 
+                        <!-- Icono: comida -->
                         <ImageView
                             android:id="@+id/food_icon"
                             android:layout_width="40dp"
@@ -214,6 +240,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_marginStart="15dp" />
 
+                        <!-- Icono: salud -->
                         <ImageView
                             android:id="@+id/health_icon"
                             android:layout_width="40dp"
@@ -225,6 +252,7 @@
                             android:layout_marginTop="-5dp"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <!-- Conteo de animales alimentados y medicados -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

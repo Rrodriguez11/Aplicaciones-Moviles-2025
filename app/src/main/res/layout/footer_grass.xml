@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Pie de pantalla reutilizable para la aplicación Faunary.
+    Incluye:
+    - Dos imágenes decorativas de césped a los lados (izquierda y derecha),
+      que se utilizan como base visual para el diseño del footer.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/footerLayout"
@@ -6,6 +12,7 @@
     android:layout_height="wrap_content"
     app:layout_constraintBottom_toBottomOf="parent">
 
+    <!-- Imagen de césped a la izquierda del footer -->
     <ImageView
         android:id="@+id/footerGrassLeft"
         android:layout_width="225dp"
@@ -15,6 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginEnd="-10dp" />
 
+    <!-- Imagen de césped a la derecha del footer -->
     <ImageView
         android:id="@+id/footerGrassRight"
         android:layout_width="225dp"

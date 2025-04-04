@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cabecera reutilizable para la aplicación Faunary.
+    Incluye:
+    - Botón de navegación a inicio (Home)
+    - Botón de usuario (perfil)
+    - Logo central de la aplicación (jirafa)
+    - Separador inferior decorativo en marrón (fau_brown)
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/headerLayout"
@@ -6,6 +14,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="55dp">
 
+    <!-- Botón para volver a la pantalla principal -->
     <ImageButton
         android:id="@+id/homeButton"
         android:layout_width="74dp"
@@ -17,6 +26,7 @@
         app:layout_constraintBottom_toBottomOf="@id/logo"
         android:layout_marginEnd="30dp" />
 
+    <!-- Botón para acceder al perfil de usuario -->
     <ImageButton
         android:id="@+id/userButton"
         android:layout_width="74dp"
@@ -28,6 +38,7 @@
         app:layout_constraintBottom_toBottomOf="@id/logo"
         android:layout_marginStart="30dp" />
 
+    <!-- Logo de Faunary (jirafa) centrado -->
     <ImageView
         android:id="@+id/logo"
         android:layout_width="160dp"
@@ -40,6 +51,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+    <!-- Línea decorativa marrón como separador -->
     <View
         android:layout_width="300dp"
         android:layout_height="4dp"
