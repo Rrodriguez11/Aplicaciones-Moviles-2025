@@ -39,14 +39,6 @@ class HabitatActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(HabitatViewModel::class.java)
         binding.viewModel = viewModel
 
-        // Observa el evento para mostrar el Toast de limpieza realizada
-        viewModel.showCleaningToast.observe(this) { show ->
-            if (show == true) {
-                Toast.makeText(this, R.string.clean_success_toast, Toast.LENGTH_SHORT).show()
-                viewModel.resetCleaningToast()
-            }
-        }
-
         Timber.i("onCreate called")
     }
 

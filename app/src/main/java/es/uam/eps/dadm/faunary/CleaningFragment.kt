@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -26,5 +27,17 @@ class CleaningFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Observa el evento para mostrar el Toast de limpieza realizada
+        viewModel.showCleaningToast.observe(viewLifecycleOwner) { show ->
+            if (show == true) {
+                Toast.makeText(requireContext(), R.string.clean_success_toast, Toast.LENGTH_SHORT).show()
+                viewModel.resetCleaningToast()
+            }
+        }
     }
 }
