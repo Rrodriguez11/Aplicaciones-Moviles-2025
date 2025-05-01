@@ -50,4 +50,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 }

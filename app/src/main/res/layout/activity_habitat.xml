@@ -29,10 +29,12 @@
         android:layout_height="match_parent"
         android:background="@drawable/faunary_app_bg">
 
-        <!-- Cabecera con navegación y logo -->
-        <include
-            android:id="@+id/headerLayout"
-            layout="@layout/header_faunary"
+        <!-- Fragmento de cabecera con navegación y logo -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/headerFragment"
+            android:name="es.uam.eps.dadm.faunary.HeaderFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -65,7 +67,7 @@
             android:scrollbarTrackVertical="@drawable/custom_scroll_track"
             android:clipToPadding="false"
             app:layout_constraintBottom_toTopOf="@id/footerLogo"
-            app:layout_constraintTop_toBottomOf="@id/headerLayout">
+            app:layout_constraintTop_toBottomOf="@id/headerFragment">
 
 
             <LinearLayout
