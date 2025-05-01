@@ -98,14 +98,11 @@
                     app:layout_constraintEnd_toEndOf="parent"/>
 
                 <!-- Fragmento: Animales -->
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/animalsFragment"
-                    android:name="es.uam.eps.dadm.faunary.AnimalsFragment"
+                <FrameLayout
+                    android:id="@+id/animalFragmentContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/cleaningFragment"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
 
             </LinearLayout>
 

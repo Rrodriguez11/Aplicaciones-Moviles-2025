@@ -14,4 +14,5 @@
     <string name="clean_delay">Retraso: %1$d días</string>
     <string name="clean_next">Siguiente: %1$d días</string>
     <string name="clean_success_toast">¡Limpieza completada!</string>
+    <string name="animal_details_button">Detalles</string>
 </resources>

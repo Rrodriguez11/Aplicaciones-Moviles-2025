@@ -27,4 +27,22 @@ class AnimalsFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.detailsButton.setOnClickListener {
+            val fragment = AnimalDetailFragment()
+
+            val args = Bundle().apply {
+                putString("animalName", "León")
+            }
+            fragment.arguments = args
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.animalFragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
 }

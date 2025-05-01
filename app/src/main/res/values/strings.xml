@@ -15,4 +15,5 @@
     <string name="clean_delay">Overdue: %1$d days</string>
     <string name="clean_next">Next: %1$d days</string>
     <string name="clean_success_toast">Cleaning completed!</string>
+    <string name="animal_details_button">Details</string>
 </resources>

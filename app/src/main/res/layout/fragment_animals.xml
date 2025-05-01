@@ -137,5 +137,21 @@
                     android:layout_marginTop="6dp"/>
             </LinearLayout>
         </LinearLayout>
+
+        <Button
+            android:id="@+id/detailsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/carter_one"
+            android:text="@string/animal_details_button"
+            android:textColor="@color/fau_brown"
+            app:backgroundTint="@color/fau_yellow"
+            app:icon="@android:drawable/ic_search_category_default"
+            app:iconSize="30dp"
+            app:iconTint="@color/fau_brown"
+            app:strokeColor="@color/fau_brown"
+            app:strokeWidth="4dp" />
     </LinearLayout>
 </layout>

@@ -39,6 +39,10 @@ class HabitatActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(HabitatViewModel::class.java)
         binding.viewModel = viewModel
 
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.animalFragmentContainer, AnimalsFragment())
+            .commit()
+
         Timber.i("onCreate called")
     }
 
