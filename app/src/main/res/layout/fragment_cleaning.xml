@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel" />
+    </data>
+
+    <!-- Sección: Limpieza -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <!-- Icono -->
+            <ImageView
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:src="@drawable/ic_clean"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"/>
+
+            <!-- Texto descriptivo y estado -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cleaning_title"
+                    android:textSize="35sp"
+                    android:textColor="@color/fau_brown"
+                    android:fontFamily="@font/carter_one" />
+
+                <!-- Texto dinámico con LiveData -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-10dp"
+                    android:text="@{viewModel.cleaningLabel}"
+                    android:textSize="18sp"
+                    android:textColor="@{viewModel.cleaningDone ? @color/fau_brown : @android:color/holo_red_dark}"
+                    android:fontFamily="@font/carter_one" />
+
+            </LinearLayout>
+
+            <!-- Icono dinámico (check/cross) -->
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="3dp"
+                android:src="@{viewModel.cleaningDone ? @drawable/ic_check : @drawable/ic_cross}"/>
+
+        </LinearLayout>
+
+        <!-- Botón para realizar limpieza -->
+        <Button
+            android:id="@+id/cleaningButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-18dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/carter_one"
+            android:onClick="@{() -> viewModel.markCleaningDone()}"
+            android:text="@string/clean_button"
+            android:textColor="@color/fau_brown"
+            android:visibility="@{viewModel.cleaningDone ? View.GONE : View.VISIBLE}"
+            app:backgroundTint="@color/fau_yellow"
+            app:icon="@android:drawable/ic_popup_sync"
+            app:iconTint="@color/fau_brown"
+            app:strokeColor="@color/fau_brown"
+            app:strokeWidth="4dp" />
+    </LinearLayout>
+</layout>
