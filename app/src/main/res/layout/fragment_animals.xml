@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel" />
+    </data>
+
+    <!-- Sección: Limpieza -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <!-- Sección: Animales -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:src="@drawable/ic_animal"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/animals_title"
+                    android:textSize="35sp"
+                    android:textColor="@color/fau_brown"
+                    android:fontFamily="@font/carter_one" />
+
+                <!-- Texto dinámico con tipo de comida -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-10dp"
+                    android:text="@{String.format(@string/food_text, @string/meat)}"
+                    android:textSize="18sp"
+                    android:textColor="@color/fau_brown"
+                    android:fontFamily="@font/carter_one" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_cross"
+                android:paddingRight="6dp"
+                android:paddingBottom="3dp"/>
+        </LinearLayout>
+
+        <!-- Línea vertical con iconos a la derecha -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="-15dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp">
+
+                <!-- Línea marrón vertical -->
+                <View
+                    android:id="@+id/linea"
+                    android:layout_width="5dp"
+                    android:layout_height="0dp"
+                    android:background="@color/fau_brown"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/food_icon"
+                    app:layout_constraintBottom_toBottomOf="@id/health_icon" />
+
+                <!-- Icono: comida -->
+                <ImageView
+                    android:id="@+id/food_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_food"
+                    app:layout_constraintStart_toEndOf="@id/linea"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="15dp" />
+
+                <!-- Icono: salud -->
+                <ImageView
+                    android:id="@+id/health_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_health"
+                    app:layout_constraintStart_toEndOf="@id/linea"
+                    app:layout_constraintTop_toBottomOf="@id/food_icon"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="-5dp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Conteo de animales alimentados y medicados -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.format(@string/fed_animals, viewModel.fedCount, viewModel.totalCount)}"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/carter_one"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.format(@string/medicated_animals, viewModel.medicatedCount, viewModel.sickCount)}"
+                    android:textColor="@color/fau_brown"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/carter_one"
+                    android:layout_marginTop="6dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
