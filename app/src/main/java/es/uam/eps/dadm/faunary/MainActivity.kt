@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         // Infla el layout usando DataBinding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        // Aplica padding la layout para que el contenido no solape con las barras del sistema.
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

@@ -1,54 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Sección: Limpieza -->
-    <LinearLayout
+    <data>
+        <variable
+            name="animal"
+            type="es.uam.eps.dadm.faunary.model.Animal" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:padding="20dp">
 
-        <!-- Sección: Animales -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-20dp"
-            android:orientation="horizontal"
-            android:padding="15dp"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="58dp"
-                android:layout_height="58dp"
-                android:src="@drawable/ic_animal"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <TextView
-                android:layout_width="195dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/carter_one"
-                android:text="@string/animals_title"
-                android:textColor="@color/fau_brown"
-                android:textSize="35sp" />
+                android:text="@{animal.nombre}"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{String.format("Especie: %s", animal.especie)}'
+                android:textSize="20sp"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{String.format("Nacimiento: %s", animal.fechaNacimiento)}'
+                android:textSize="20sp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{String.format("Peso: %.1f kg", animal.peso)}'
+                android:textSize="20sp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{animal.hambre ? "Estado: Tiene hambre" : "Estado: Alimentado"}'
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/holo_red_dark" />
+
+            <!-- Puedes añadir más info como enfermedades, si quieres -->
 
             <Button
                 android:id="@+id/back_to_summary_button"
-                android:layout_width="63dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="40dp"
-                android:fontFamily="@font/carter_one"
-                android:textColor="@color/fau_brown"
-                app:backgroundTint="@color/fau_yellow"
-                app:icon="@android:drawable/ic_menu_revert"
-                app:iconSize="30dp"
-                app:iconTint="@color/fau_brown"
-                app:strokeColor="@color/fau_brown"
-                app:strokeWidth="4dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Volver"
+                android:layout_marginTop="20dp"/>
         </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 </layout>

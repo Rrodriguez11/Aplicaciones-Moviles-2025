@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import es.uam.eps.dadm.faunary.R
+import es.uam.eps.dadm.faunary.model.Animal
+import es.uam.eps.dadm.faunary.model.Enfermedad
+import es.uam.eps.dadm.faunary.model.Recinto
 import timber.log.Timber
 
 /**
@@ -15,23 +17,59 @@ import timber.log.Timber
  */
 class HabitatViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Tipo de comida actual
-    val foodType = MutableLiveData<Int>(R.string.meat)
+    // Creamos un recinto de ejemplo con algunos animales
+    private val _recinto = MutableLiveData<Recinto>().apply {
+        value = Recinto(
+            nombre = "Sabana",
+            tipo = "Terrestre - Carnívoros",
+            capacidad = 5,
+            diasEntreLimpiezas = 3,
+            limpiezaHecha = false,
+            animales = mutableListOf(
+                Animal(
+                    nombre = "Simba",
+                    especie = "León",
+                    fechaNacimiento = "2019-05-12",
+                    peso = 180.0,
+                    hambre = true,
+                    enfermedades = mutableListOf(
+                        Enfermedad("Pulgas", "2024-05-01", superada = false, medicinaDada = false)
+                    )
+                ),
+                Animal(
+                    nombre = "Nala",
+                    especie = "Leona",
+                    fechaNacimiento = "2020-08-03",
+                    peso = 150.0,
+                    hambre = false
+                )
+            )
+        )
+    }
 
-    // Número de animales alimentados y total
-    val fedCount = MutableLiveData<Int>(11)
-    val totalCount = MutableLiveData<Int>(12)
+    val recinto: LiveData<Recinto> get() = _recinto
 
-    // Número de animales medicados y enfermos
-    val medicatedCount = MutableLiveData<Int>(3)
-    val sickCount = MutableLiveData<Int>(3)
+    private val _fedCount = MutableLiveData(
+        _recinto.value?.animales?.count { !it.hambre } ?: 0
+    )
+    val fedCount: LiveData<Int> get() = _fedCount
+
+    val totalCount: LiveData<Int> = MutableLiveData(
+        _recinto.value?.animales?.size ?: 0
+    )
+
+
+    val sickCount: LiveData<Int> = MutableLiveData(
+        _recinto.value?.animales?.count { it.estaEnfermo() } ?: 0
+    )
+    val medicatedCount: LiveData<Int> = MutableLiveData(
+        _recinto.value?.animales?.count { it.estaEnfermo() && !it.necesitaMedicina() } ?: 0
+    )
 
     // Días que faltan para realizar la limpieza (si aún no se ha hecho)
     val cleanDelayDays = MutableLiveData<Int>(2)
-
     // Frecuencia de limpieza (en días)
     val cleanFrequency = MutableLiveData<Int>(4)
-
     // Texto que indica cuándo es la próxima limpieza, cambia según el estado
     val cleaningLabel = MutableLiveData<String>()
 
@@ -55,9 +93,9 @@ class HabitatViewModel(application: Application) : AndroidViewModel(application)
         val done = cleaningDone.value ?: false
         val context = getApplication<Application>()
         val text = if (done) {
-            context.getString(R.string.clean_next, cleanFrequency.value)
+            context.getString(es.uam.eps.dadm.faunary.R.string.clean_next, cleanFrequency.value)
         } else {
-            context.getString(R.string.clean_delay, cleanDelayDays.value)
+            context.getString(es.uam.eps.dadm.faunary.R.string.clean_delay, cleanDelayDays.value)
         }
         cleaningLabel.value = text
     }
@@ -77,5 +115,10 @@ class HabitatViewModel(application: Application) : AndroidViewModel(application)
      */
     fun resetCleaningToast() {
         _showCleaningToast.value = false
+    }
+
+    fun alimentarAnimal(animal: Animal) {
+        animal.hambre = false
+        _fedCount.value = _recinto.value?.animales?.count { !it.hambre }
     }
 }

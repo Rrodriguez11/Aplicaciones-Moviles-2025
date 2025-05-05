@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="animal"
+            type="es.uam.eps.dadm.faunary.model.Animal" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/animalName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{animal.nombre}"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/animalSpecies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{String.format("Especie: %s", animal.especie)}'
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/animalStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{animal.hambre ? "¡Tiene hambre!" : "Alimentado"}'
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_red_dark"/>
+
+        <Button
+            android:id="@+id/feedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alimentar"
+            android:layout_marginTop="8dp"
+            android:enabled="@{animal.hambre}"
+            android:visibility="@{animal.hambre ? View.VISIBLE : View.GONE}"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_green_dark"/>
+    </LinearLayout>
+</layout>

@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import es.uam.eps.dadm.faunary.databinding.FragmentAnimalsBinding
 import es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel
+import es.uam.eps.dadm.faunary.adapter.AnimalAdapter
 
 class AnimalsFragment : Fragment() {
 
@@ -21,28 +23,23 @@ class AnimalsFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_animals, container, false)
         viewModel = ViewModelProvider(requireActivity())[HabitatViewModel::class.java]
-
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.detailsButton.setOnClickListener {
-            val fragment = AnimalDetailFragment()
-
-            val args = Bundle().apply {
-                putString("animalName", "León")
+        val recinto = viewModel.recinto.value
+        if (recinto != null) {
+            val adapter = AnimalAdapter(recinto.animales) { animal ->
+                viewModel.alimentarAnimal(animal)
+                // Actualiza el RecyclerView al alimentar
+                binding.recyclerView.adapter?.notifyDataSetChanged()
             }
-            fragment.arguments = args
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.animalFragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit()
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerView.adapter = adapter
         }
     }
 }
