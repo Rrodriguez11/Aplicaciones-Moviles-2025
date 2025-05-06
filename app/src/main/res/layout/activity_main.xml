@@ -53,14 +53,16 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
+            android:clipToPadding="false"
+            android:paddingBottom="90dp"
             android:scrollbarThumbVertical="@drawable/custom_scroll_thumb"
             android:scrollbarTrackVertical="@drawable/custom_scroll_track"
             android:paddingEnd="12dp"
-            android:clipToPadding="false"
             app:layout_constraintBottom_toTopOf="@id/footerLogo"
             app:layout_constraintTop_toBottomOf="@id/headerFragment">
 
-            <!-- Contenedor vertical con texto y botón -->
+
+        <!-- Contenedor vertical con texto y botón -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -21,19 +21,25 @@ class AnimalDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_animal_detail, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_animal_detail,
+            container,
+            false
+        )
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Recuperar el objeto Animal del Bundle
         val animal = arguments?.getSerializable(ANIMAL_KEY) as? Animal
-
         animal?.let {
             binding.animal = it
         }
 
+        // Botón para volver al fragmento anterior
         binding.backToSummaryButton.setOnClickListener {
             parentFragmentManager.popBackStack()
         }

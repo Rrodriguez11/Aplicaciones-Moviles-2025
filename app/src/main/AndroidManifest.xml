@@ -20,6 +20,8 @@
             android:name=".HabitatActivity"
             android:exported="false" />
         <activity
+            android:name=".AnimalDetailActivity" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

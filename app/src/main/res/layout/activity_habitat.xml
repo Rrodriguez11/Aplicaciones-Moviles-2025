@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Layout para HabitatActivity de la app Faunary.
-    Incluye:
-    - Enlace a ViewModel (con LiveData para actualizar dinámicamente).
-    - Cabecera reutilizable con navegación.
-    - Footer decorativo con césped y logo.
-    - Contenido principal dentro de un ScrollView:
-        - Información de limpieza.
-        - Información sobre animales y salud.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".HabitatActivity">
 
-    <!-- ViewModel para DataBinding -->
     <data>
         <import type="android.view.View" />
         <variable
@@ -22,14 +11,12 @@
             type="es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel" />
     </data>
 
-    <!-- Contenedor principal -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/faunary_app_bg">
 
-        <!-- Fragmento de cabecera con navegación y logo -->
+        <!-- Cabecera superior (no se desplaza) -->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/headerFragment"
             android:name="es.uam.eps.dadm.faunary.HeaderFragment"
@@ -39,6 +26,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Contenido scrollable principal -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:clipToPadding="false"
+            android:paddingBottom="90dp"
+            app:layout_constraintTop_toBottomOf="@id/headerFragment"
+            app:layout_constraintBottom_toTopOf="@id/footerLogo">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center_horizontal">
+
+                <!-- Título del recinto -->
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/carter_one"
+                    android:text='@{String.format("Recinto: %s", viewModel.recinto.nombre)}'
+                    android:textSize="30sp"
+                    android:textColor="@color/fau_yellow_strong"
+                    tools:text="Recinto: Leones" />
+
+                <!-- Limpieza -->
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/cleaningFragmentContainer"
+                    android:name="es.uam.eps.dadm.faunary.CleaningFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- Animales -->
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/animalFragmentContainer"
+                    android:name="es.uam.eps.dadm.faunary.AnimalsFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
         <!-- Footer con césped -->
         <include
             android:id="@+id/footerLayout"
@@ -47,66 +80,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Logo de Faunary sobre el footer -->
+        <!-- Logo sobre el footer -->
         <ImageView
             android:id="@+id/footerLogo"
             android:layout_width="300dp"
             android:layout_height="70dp"
             android:src="@drawable/logo_faunary_text"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <!-- Contenido principal scrollable -->
-        <ScrollView
-            android:id="@+id/scrollContainer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:fillViewport="true"
-            android:scrollbarThumbVertical="@drawable/custom_scroll_thumb"
-            android:scrollbarTrackVertical="@drawable/custom_scroll_track"
-            android:clipToPadding="false"
-            app:layout_constraintBottom_toTopOf="@id/footerLogo"
-            app:layout_constraintTop_toBottomOf="@id/headerFragment">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <!-- Nombre del hábitat/animal -->
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/carter_one"
-                    android:text="@string/lion_name"
-                    android:textSize="50sp"
-                    android:textColor="@color/fau_yellow_strong"
-                    tools:text="Animal" />
-
-                <!-- Fragmento: Limpieza -->
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/cleaningFragment"
-                    android:name="es.uam.eps.dadm.faunary.CleaningFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/textView"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                <!-- Fragmento: Animales -->
-                <FrameLayout
-                    android:id="@+id/animalFragmentContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"/>
-
-            </LinearLayout>
-
-        </ScrollView>
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

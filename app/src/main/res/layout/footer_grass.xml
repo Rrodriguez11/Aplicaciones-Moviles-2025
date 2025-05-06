@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Pie de pantalla reutilizable para la aplicación Faunary.
-    Incluye:
-    - Dos imágenes decorativas de césped a los lados (izquierda y derecha),
-      que se utilizan como base visual para el diseño del footer.
--->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/footerLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="0dp"
+    android:translationZ="0dp"
     app:layout_constraintBottom_toBottomOf="parent">
 
-    <!-- Imagen de césped a la izquierda del footer -->
+    <!-- Césped izquierda -->
     <ImageView
         android:id="@+id/footerGrassLeft"
         android:layout_width="225dp"
         android:layout_height="195dp"
         android:src="@drawable/footer_grass"
+        android:elevation="0dp"
+        android:translationZ="0dp"
+        android:layout_marginEnd="-10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginEnd="-10dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Imagen de césped a la derecha del footer -->
+    <!-- Césped derecha -->
     <ImageView
         android:id="@+id/footerGrassRight"
         android:layout_width="225dp"
         android:layout_height="195dp"
         android:src="@drawable/footer_grass"
         android:scaleX="-1"
+        android:elevation="0dp"
+        android:translationZ="0dp"
+        android:layout_marginEnd="-10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="-10dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

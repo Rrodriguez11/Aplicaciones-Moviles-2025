@@ -24,16 +24,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/animals_title"
+                android:text="Animales del recinto:"
                 android:textSize="30sp"
                 android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{String.format(@string/food_text, @string/meat)}"
-                android:textSize="18sp"
-                android:layout_marginTop="4dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -52,7 +45,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lista de animales reales:"
+                android:text="Listado de animales:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp" />

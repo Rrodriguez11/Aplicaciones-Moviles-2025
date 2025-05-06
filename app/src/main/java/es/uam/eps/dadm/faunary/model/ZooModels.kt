@@ -15,6 +15,7 @@ data class Animal(
     var fechaNacimiento: String,
     var peso: Double,
     var hambre: Boolean = true,
+    var alimento: String = "Carne",
     var enfermedades: MutableList<Enfermedad> = mutableListOf()
 ) : Serializable {
     fun estaEnfermo(): Boolean = enfermedades.any { !it.superada }

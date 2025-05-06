@@ -5,6 +5,9 @@
         <variable
             name="animal"
             type="es.uam.eps.dadm.faunary.model.Animal" />
+        <variable
+            name="activity"
+            type="android.app.Activity" />
     </data>
 
     <ScrollView
@@ -59,7 +62,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Volver"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:onClick="@{() -> activity.finish()}" />
         </LinearLayout>
     </ScrollView>
 </layout>
