@@ -80,6 +80,10 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
         recintoCargado.animales.forEach { animal ->
             val alimentado = FaunaryPrefs.estaAnimalAlimentado(getApplication(), recintoCargado.nombre, animal.nombre)
             animal.hambre = !alimentado
+
+            if (FaunaryPrefs.estaAnimalMedicado(getApplication(), recintoCargado.nombre, animal.nombre)) {
+                animal.enfermedades.forEach { it.medicinaDada = true }
+            }
         }
 
     }
@@ -136,11 +140,15 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
 
     fun medicarAnimal(animal: Animal) {
         animal.medicar()
-
         _recinto.value = _recinto.value
+
+        _recinto.value?.let {
+            FaunaryPrefs.guardarAnimalMedicado(getApplication(), it.nombre, animal.nombre)
+        }
 
         (medicatedCount as MutableLiveData).value =
             _recinto.value?.animales?.count { it.estaEnfermo() && !it.necesitaMedicina() } ?: 0
     }
+
 
 }

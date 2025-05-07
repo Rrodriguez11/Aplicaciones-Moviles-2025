@@ -30,4 +30,16 @@ object FaunaryPrefs {
         return getPrefs(context).getBoolean("${recinto}_${animal}_alimentado", false)
     }
 
+    fun guardarAnimalMedicado(context: Context, recinto: String, animal: String) {
+        getPrefs(context)
+            .edit()
+            .putBoolean("${recinto}_${animal}_medicado", true)
+            .apply()
+    }
+
+    fun estaAnimalMedicado(context: Context, recinto: String, animal: String): Boolean {
+        return getPrefs(context).getBoolean("${recinto}_${animal}_medicado", false)
+    }
+
+
 }
