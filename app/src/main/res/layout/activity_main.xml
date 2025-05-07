@@ -80,19 +80,33 @@
                     android:textSize="30sp"
                     tools:text="Texto en entorno" />
 
-                <!-- Botón con acción principal -->
+                <!-- Botones principales del menú principal -->
                 <Button
-                    android:id="@+id/btnTest"
-                    style="@style/Widget.AppCompat.Button"
+                    android:id="@+id/btnHabitats"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="48dp"
                     android:fontFamily="@font/carter_one"
-                    android:scaleX="2"
-                    android:scaleY="2"
-                    android:text="@string/lion_name"
-                    app:icon="@android:drawable/btn_star_big_on"
-                    app:iconTint="#fdac38" />
+                    android:text="Hábitats"
+                    android:textSize="22sp"
+                    android:padding="12dp"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/fau_yellow_strong"
+                    />
+
+                <Button
+                    android:id="@+id/btnAlmacen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/carter_one"
+                    android:text="Almacén"
+                    android:textSize="22sp"
+                    android:padding="12dp"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/fau_brown"
+                    />
+
 
             </LinearLayout>
         </ScrollView>

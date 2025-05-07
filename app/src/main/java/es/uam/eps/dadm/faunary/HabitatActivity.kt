@@ -7,8 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.databinding.DataBindingUtil
 import es.uam.eps.dadm.faunary.databinding.ActivityHabitatBinding
 import es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel
-import android.widget.Toast
 import timber.log.Timber
+import android.util.Log
+
 
 /**
  * Actividad que muestra la vista detallada de un hábitat.
@@ -35,9 +36,15 @@ class HabitatActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_habitat)
         binding.lifecycleOwner = this
 
-        // Inicializa el ViewModel y lo asocia al binding
-        viewModel = ViewModelProvider(this).get(HabitatViewModel::class.java)
+        // Recupera el nombre del hábitat desde el Intent
+        val habitatName = intent.getStringExtra("HABITAT_NAME") ?: ""
+
+        // Usa el ViewModelFactory para pasar el nombre al ViewModel
+        val factory = es.uam.eps.dadm.faunary.viewmodel.HabitatViewModelFactory(application, habitatName)
+        viewModel = ViewModelProvider(this, factory).get(HabitatViewModel::class.java)
+
         binding.viewModel = viewModel
+
 
         Timber.i("onCreate called")
     }

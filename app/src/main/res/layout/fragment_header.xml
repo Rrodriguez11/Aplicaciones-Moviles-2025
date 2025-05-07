@@ -9,42 +9,48 @@
 -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/headerLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="55dp">
 
     <!-- Botón para volver a la pantalla principal -->
-    <ImageButton
-        android:id="@+id/homeButton"
-        android:layout_width="74dp"
-        android:layout_height="74dp"
-        android:background="@drawable/ic_home"
-        android:contentDescription="Home"
-        app:layout_constraintEnd_toStartOf="@+id/logo"
-        app:layout_constraintTop_toTopOf="@id/logo"
-        app:layout_constraintBottom_toBottomOf="@id/logo"
-        android:layout_marginEnd="30dp" />
 
     <!-- Botón para acceder al perfil de usuario -->
-    <ImageButton
-        android:id="@+id/userButton"
-        android:layout_width="74dp"
-        android:layout_height="74dp"
-        android:background="@drawable/ic_user"
-        android:contentDescription="User"
-        app:layout_constraintStart_toEndOf="@+id/logo"
-        app:layout_constraintTop_toTopOf="@id/logo"
-        app:layout_constraintBottom_toBottomOf="@id/logo"
-        android:layout_marginStart="30dp" />
 
     <!-- Logo de Faunary (jirafa) centrado -->
 
     <!-- Línea decorativa marrón como separador -->
+
+    <ImageButton
+        android:id="@+id/homeButton"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/ic_home"
+        android:contentDescription="Home"
+        app:layout_constraintBottom_toBottomOf="@id/logo"
+        app:layout_constraintEnd_toStartOf="@+id/logo"
+        app:layout_constraintTop_toTopOf="@id/logo"
+        app:layout_constraintVertical_bias="0.444" />
+
+    <ImageButton
+        android:id="@+id/userButton"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="40dp"
+        android:background="@drawable/ic_user"
+        android:contentDescription="User"
+        app:layout_constraintBottom_toBottomOf="@id/logo"
+        app:layout_constraintStart_toEndOf="@+id/logo"
+        app:layout_constraintTop_toTopOf="@id/logo"
+        app:layout_constraintVertical_bias="0.444" />
+
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="132dp"
+        android:layout_height="119dp"
         android:src="@drawable/logo_faunary_giraffe"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

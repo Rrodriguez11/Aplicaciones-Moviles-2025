@@ -8,6 +8,8 @@ import es.uam.eps.dadm.faunary.model.Animal
 import es.uam.eps.dadm.faunary.model.Enfermedad
 import es.uam.eps.dadm.faunary.model.Recinto
 import timber.log.Timber
+import es.uam.eps.dadm.faunary.data.DataRepository
+
 
 /**
  * ViewModel asociado a la pantalla del hábitat.
@@ -15,36 +17,12 @@ import timber.log.Timber
  * alimentación y medicación de los animales.
  * Utiliza LiveData para actualizar automáticamente la interfaz.
  */
-class HabitatViewModel(application: Application) : AndroidViewModel(application) {
+class HabitatViewModel(application: Application, habitatName: String) : AndroidViewModel(application) {
 
     // Creamos un recinto de ejemplo con algunos animales
     private val _recinto = MutableLiveData<Recinto>().apply {
-        value = Recinto(
-            nombre = "Sabana",
-            tipo = "Terrestre - Carnívoros",
-            capacidad = 5,
-            diasEntreLimpiezas = 3,
-            limpiezaHecha = false,
-            animales = mutableListOf(
-                Animal(
-                    nombre = "Simba",
-                    especie = "León",
-                    fechaNacimiento = "2019-05-12",
-                    peso = 180.0,
-                    hambre = true,
-                    enfermedades = mutableListOf(
-                        Enfermedad("Pulgas", "2024-05-01", superada = false, medicinaDada = false)
-                    )
-                ),
-                Animal(
-                    nombre = "Nala",
-                    especie = "Leona",
-                    fechaNacimiento = "2020-08-03",
-                    peso = 150.0,
-                    hambre = false
-                )
-            )
-        )
+        value = DataRepository.getRecintoByNombre(habitatName)
+        requireNotNull(value) { "Recinto no encontrado: $habitatName" }
     }
 
     val recinto: LiveData<Recinto> get() = _recinto
@@ -121,4 +99,14 @@ class HabitatViewModel(application: Application) : AndroidViewModel(application)
         animal.hambre = false
         _fedCount.value = _recinto.value?.animales?.count { !it.hambre }
     }
+
+    fun medicarAnimal(animal: Animal) {
+        animal.medicar()
+
+        _recinto.value = _recinto.value
+
+        (medicatedCount as MutableLiveData).value =
+            _recinto.value?.animales?.count { it.estaEnfermo() && !it.necesitaMedicina() } ?: 0
+    }
+
 }

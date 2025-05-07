@@ -43,6 +43,15 @@
             android:textSize="16sp"
             android:textColor="@android:color/holo_red_dark"/>
 
+        <TextView
+            android:id="@+id/medicationStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{animal.necesitaMedicina() ? "¡Necesita medicación!" : "No necesita medicación"}'
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginTop="4dp"/>
+
         <Button
             android:id="@+id/feedButton"
             android:layout_width="wrap_content"
@@ -53,5 +62,17 @@
             android:visibility="@{animal.hambre ? View.VISIBLE : View.GONE}"
             android:textColor="@android:color/white"
             android:background="@android:color/holo_green_dark"/>
+
+        <Button
+            android:id="@+id/medicateButton"
+            android:layout_width="121dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/holo_blue_dark"
+            android:enabled="@{animal.necesitaMedicina()}"
+            android:text="Medicar"
+            android:textColor="@android:color/white"
+            android:visibility="@{animal.necesitaMedicina() ? View.VISIBLE : View.GONE}" />
+
     </LinearLayout>
 </layout>

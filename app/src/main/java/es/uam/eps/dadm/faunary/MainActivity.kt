@@ -8,6 +8,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import es.uam.eps.dadm.faunary.databinding.ActivityMainBinding
+import android.widget.Toast
+
 
 /**
  * Actividad principal de la aplicación (menú principal).
@@ -35,10 +37,17 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // Botón que lleva a la vista del hábitat
-        binding.btnTest.setOnClickListener {
-            val intent = Intent(this, HabitatActivity::class.java)
+        // Botón de hábitats
+        binding.btnHabitats.setOnClickListener {
+            val intent = Intent(this, HabitatSelectionActivity::class.java)
             startActivity(intent)
         }
+
+        // Botón de Almacén
+        binding.btnAlmacen.setOnClickListener {
+            // De momento mostramos un mensaje
+            Toast.makeText(this, "Sección de Almacén no disponible aún", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }
