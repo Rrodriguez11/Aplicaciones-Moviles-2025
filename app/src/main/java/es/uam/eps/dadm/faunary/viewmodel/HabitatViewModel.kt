@@ -1,16 +1,16 @@
 package es.uam.eps.dadm.faunary.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import es.uam.eps.dadm.faunary.FaunaryPrefs
 import es.uam.eps.dadm.faunary.model.Animal
 import es.uam.eps.dadm.faunary.model.Enfermedad
 import es.uam.eps.dadm.faunary.model.Recinto
 import timber.log.Timber
 import es.uam.eps.dadm.faunary.data.DataRepository
-
+import es.uam.eps.dadm.faunary.database.ZooDatabase
+import es.uam.eps.dadm.faunary.database.AnimalEntity
+import es.uam.eps.dadm.faunary.database.HabitatEntity
 
 
 /**
@@ -19,12 +19,24 @@ import es.uam.eps.dadm.faunary.data.DataRepository
  * alimentación y medicación de los animales.
  * Utiliza LiveData para actualizar automáticamente la interfaz.
  */
-class HabitatViewModel(application: Application, habitatName: String) : AndroidViewModel(application) {
+class HabitatViewModel(application: Application, habitatId: Long) : AndroidViewModel(application) {
+
+    private val habitatDao = ZooDatabase.getDatabase(application).habitatDao()
+    private val animalDao = ZooDatabase.getDatabase(application).animalDao()
+
+    val habitat: LiveData<HabitatEntity?> = liveData {
+        val result = habitatDao.getHabitatPorId(habitatId)
+        emit(result)
+    }
+
+
+    val habitatName2 = "Sabana" // para que funcione de momento, ahora lo quito
+    val habitatName: LiveData<String?> = habitat.map { it?.nombre }
 
     // Creamos un recinto de ejemplo con algunos animales
     private val _recinto = MutableLiveData<Recinto>().apply {
-        value = DataRepository.getRecintoByNombre(habitatName)
-        requireNotNull(value) { "Recinto no encontrado: $habitatName" }
+        value = DataRepository.getRecintoByNombre(habitatName2)
+        requireNotNull(value) { "Recinto no encontrado: $habitatName2" }
     }
 
     val recinto: LiveData<Recinto> get() = _recinto
@@ -64,8 +76,9 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
     val showCleaningToast: LiveData<Boolean> get() = _showCleaningToast
 
     init {
+        Timber.i("habitatId: ${habitatId} (${habitatName})")
         // Cargar el recinto desde el repositorio
-        val recintoCargado = DataRepository.getRecintoByNombre(habitatName)
+        val recintoCargado = DataRepository.getRecintoByNombre(habitatName2)
         requireNotNull(recintoCargado) { "Recinto no encontrado: $habitatName" }
 
         // Restaurar si ya había sido limpiado

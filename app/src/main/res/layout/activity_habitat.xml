@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/carter_one"
-                    android:text='@{String.format("Recinto: %s", viewModel.recinto.nombre)}'
+                    android:text='@{String.format("Recinto: %s", viewModel.habitatName)}'
                     android:textSize="30sp"
                     android:textColor="@color/fau_yellow_strong"
                     tools:text="Recinto: Leones" />
