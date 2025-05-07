@@ -1,12 +1,10 @@
 package es.uam.eps.dadm.faunary.data
 
+import android.content.Context
+import es.uam.eps.dadm.faunary.FaunaryPrefs
 import es.uam.eps.dadm.faunary.model.Animal
 import es.uam.eps.dadm.faunary.model.Enfermedad
 import es.uam.eps.dadm.faunary.model.Recinto
-import es.uam.eps.dadm.faunary.FaunaryPrefs
-import android.content.Context
-
-
 
 object DataRepository {
 
@@ -24,8 +22,17 @@ object DataRepository {
                     fechaNacimiento = "2019-05-12",
                     peso = 180.0,
                     hambre = true,
+                    frecuenciaComida = 2,
+                    diasHastaProximaComida = 0,
                     enfermedades = mutableListOf(
-                        Enfermedad("Pulgas", "2024-05-01", superada = false, medicinaDada = false)
+                        Enfermedad(
+                            nombre = "Pulgas",
+                            fecha = "2024-05-01",
+                            superada = false,
+                            medicinaDada = false,
+                            frecuenciaMedicar = 2,
+                            diasHastaProximaMedicina = 0
+                        )
                     )
                 ),
                 Animal(
@@ -33,7 +40,9 @@ object DataRepository {
                     especie = "Leona",
                     fechaNacimiento = "2020-08-03",
                     peso = 150.0,
-                    hambre = false
+                    hambre = true,
+                    frecuenciaComida = 2,
+                    diasHastaProximaComida = 0
                 )
             )
         ),
@@ -49,7 +58,9 @@ object DataRepository {
                     especie = "Oso polar",
                     fechaNacimiento = "2018-11-01",
                     peso = 400.0,
-                    hambre = true
+                    hambre = true,
+                    frecuenciaComida = 1,
+                    diasHastaProximaComida = 0
                 ),
                 Animal(
                     nombre = "Kenai",
@@ -57,8 +68,17 @@ object DataRepository {
                     fechaNacimiento = "2017-03-22",
                     peso = 430.0,
                     hambre = true,
+                    frecuenciaComida = 1,
+                    diasHastaProximaComida = 0,
                     enfermedades = mutableListOf(
-                        Enfermedad("Resfriado", "2024-04-28", superada = false, medicinaDada = false)
+                        Enfermedad(
+                            nombre = "Resfriado",
+                            fecha = "2024-04-28",
+                            superada = false,
+                            medicinaDada = false,
+                            frecuenciaMedicar = 1,
+                            diasHastaProximaMedicina = 0
+                        )
                     )
                 )
             )
@@ -73,31 +93,54 @@ object DataRepository {
 
     fun actualizarEstadoDiario(context: Context) {
         habitats.forEach { recinto ->
-            if (!recinto.limpiezaHecha) {
+            if (recinto.limpiezaHecha) {
                 recinto.diasEntreLimpiezas -= 1
+                if (recinto.diasEntreLimpiezas <= 0) {
+                    recinto.diasEntreLimpiezas = 0
+                    recinto.limpiezaHecha = false
+                }
             } else {
-                recinto.diasEntreLimpiezas = recinto.diasEntreLimpiezasOriginal
-                recinto.limpiezaHecha = false
+                recinto.diasEntreLimpiezas += 1
             }
 
-            // Guardar el nuevo valor
             FaunaryPrefs.guardarDiasParaLimpieza(context, recinto.nombre, recinto.diasEntreLimpiezas)
+            FaunaryPrefs.guardarEstadoLimpieza(context, recinto.nombre, recinto.limpiezaHecha)
 
-
-            // ANIMALES
             recinto.animales.forEach { animal ->
-                animal.diasParaComer -= 1
-                if (animal.diasParaComer <= 0) {
-                    animal.hambre = true
-                    animal.diasParaComer = 2 // reinicia al valor base
+                if (animal.hambre) {
+                    animal.diasHastaProximaComida = 0
+                } else {
+                    animal.diasHastaProximaComida -= 1
+                    if (animal.diasHastaProximaComida <= 0) {
+                        animal.hambre = true
+                        animal.diasHastaProximaComida = 0
+                        FaunaryPrefs.guardarAnimalAlimentado(context, recinto.nombre, animal.nombre, false)
+                    }
                 }
 
-                // ENFERMEDADES
                 animal.enfermedades.forEach { enfermedad ->
-                    enfermedad.diasParaMedicar -= 1
-                    if (enfermedad.diasParaMedicar <= 0) {
-                        enfermedad.medicinaDada = false
-                        enfermedad.diasParaMedicar = 3 // reinicia al valor base
+                    if (!enfermedad.superada) {
+                        if (!enfermedad.medicinaDada) {
+                            // Si aún no ha sido medicado, mantener contador en 0
+                            enfermedad.diasHastaProximaMedicina = 0
+                        } else {
+                            // Reducir contador solo si ya ha sido medicado
+                            enfermedad.diasHastaProximaMedicina -= 1
+
+                            if (enfermedad.diasHastaProximaMedicina <= 0) {
+                                enfermedad.diasHastaProximaMedicina = 0
+                                enfermedad.medicinaDada = false
+                                FaunaryPrefs.guardarAnimalMedicado(context, recinto.nombre, animal.nombre)
+                            }
+                        }
+
+                        // Siempre guardar el contador actual (aunque sea 0)
+                        FaunaryPrefs.guardarDiasHastaProximaMedicina(
+                            context,
+                            animal.nombre,
+                            enfermedad.nombre,
+                            enfermedad.diasHastaProximaMedicina
+                        )
                     }
                 }
             }
@@ -111,16 +154,13 @@ object DataRepository {
 
             recinto.animales.forEach { animal ->
                 animal.hambre = true
-                animal.diasParaComer = 0
+                animal.diasHastaProximaComida = 0
 
                 animal.enfermedades.forEach { enfermedad ->
                     enfermedad.medicinaDada = false
-                    enfermedad.diasParaMedicar = 0
+                    enfermedad.diasHastaProximaMedicina = 0
                 }
             }
         }
     }
-
-
-
 }

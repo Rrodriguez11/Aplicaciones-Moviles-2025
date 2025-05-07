@@ -54,5 +54,18 @@ object FaunaryPrefs {
     }
 
 
+    fun guardarDiasHastaProximaMedicina(context: Context, animalNombre: String, enfermedadNombre: String, dias: Int) {
+        val prefs = getPrefs(context)
+        prefs.edit().putInt("dias_medicina_${animalNombre}_$enfermedadNombre", dias).apply()
+    }
+
+    fun obtenerDiasHastaProximaMedicina(context: Context, animalNombre: String, enfermedadNombre: String): Int? {
+        val prefs = getPrefs(context)
+        val key = "dias_medicina_${animalNombre}_$enfermedadNombre"
+        return if (prefs.contains(key)) prefs.getInt(key, 0) else null
+    }
+
+
+
 
 }

@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity() {
             } catch (_: Exception) {
                 null
             }
-
             viewModel?.forzarActualizacion()
         }
 

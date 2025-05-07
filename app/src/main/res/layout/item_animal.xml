@@ -58,20 +58,20 @@
             android:layout_height="wrap_content"
             android:text="Alimentar"
             android:layout_marginTop="8dp"
-            android:enabled="@{animal.hambre}"
-            android:visibility="@{animal.hambre ? View.VISIBLE : View.GONE}"
+            android:enabled="@{animal.hambre &amp;&amp; animal.diasHastaProximaComida == 0}"
+            android:visibility="@{animal.hambre &amp;&amp; animal.diasHastaProximaComida == 0 ? View.VISIBLE : View.GONE}"
             android:textColor="@android:color/white"
             android:background="@android:color/holo_green_dark"/>
 
         <Button
             android:id="@+id/medicateButton"
-            android:layout_width="121dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/holo_blue_dark"
-            android:enabled="@{animal.necesitaMedicina()}"
             android:text="Medicar"
+            android:background="@android:color/holo_blue_dark"
             android:textColor="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:enabled="@{animal.necesitaMedicina()}"
             android:visibility="@{animal.necesitaMedicina() ? View.VISIBLE : View.GONE}" />
 
     </LinearLayout>

@@ -26,8 +26,8 @@
 
             <!-- Icono -->
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_clean" />
@@ -43,7 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/cleaning_title"
-                    android:textSize="32sp"
+                    android:textSize="30sp"
                     android:textColor="@color/fau_brown"
                     android:fontFamily="@font/carter_one" />
 

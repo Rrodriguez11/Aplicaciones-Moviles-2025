@@ -7,8 +7,10 @@ data class Enfermedad(
     val fecha: String,
     var superada: Boolean,
     var medicinaDada: Boolean,
-    var diasParaMedicar: Int = 3
+    var frecuenciaMedicar: Int = 3,
+    var diasHastaProximaMedicina: Int = frecuenciaMedicar
 ) : Serializable
+
 
 data class Animal(
     var nombre: String,
@@ -17,13 +19,15 @@ data class Animal(
     var peso: Double,
     var hambre: Boolean = true,
     var alimento: String = "Carne",
-    var diasParaComer: Int = 2,
+    var frecuenciaComida: Int = 2,
+    var diasHastaProximaComida: Int = frecuenciaComida,
     var enfermedades: MutableList<Enfermedad> = mutableListOf()
 ) : Serializable {
+
     fun estaEnfermo(): Boolean = enfermedades.any { !it.superada }
 
     fun necesitaMedicina(): Boolean =
-        enfermedades.any { !it.superada && !it.medicinaDada }
+        enfermedades.any { !it.superada && !it.medicinaDada && it.diasHastaProximaMedicina == 0 }
 
     fun alimentar() {
         hambre = false
@@ -31,9 +35,17 @@ data class Animal(
 
     fun medicar() {
         enfermedades.forEach {
-            if (!it.superada && !it.medicinaDada) {
+            if (!it.superada && !it.medicinaDada && it.diasHastaProximaMedicina == 0) {
                 it.medicinaDada = true
+                it.diasHastaProximaMedicina = it.frecuenciaMedicar
             }
+        }
+    }
+
+
+    fun debeSerMedicadoHoy(): Boolean {
+        return enfermedades.any {
+            !it.superada && !it.medicinaDada && it.diasHastaProximaMedicina == 0
         }
     }
 }

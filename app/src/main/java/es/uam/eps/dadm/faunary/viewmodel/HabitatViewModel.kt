@@ -3,6 +3,7 @@ package es.uam.eps.dadm.faunary.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import es.uam.eps.dadm.faunary.FaunaryPrefs
 import es.uam.eps.dadm.faunary.model.Animal
@@ -54,6 +55,26 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
     private val _cleaningLabel = MutableLiveData<String>()
     val cleaningLabel: LiveData<String> get() = _cleaningLabel
 
+    val todosAlimentados: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        addSource(fedCount) { value = fedCount.value == totalCount.value }
+        addSource(totalCount) { value = fedCount.value == totalCount.value }
+    }
+
+    val todosMedicados: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        addSource(medicatedCount) { value = medicatedCount.value == sickCount.value }
+        addSource(sickCount) { value = medicatedCount.value == sickCount.value }
+    }
+
+    val animalesEnBuenEstado: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        fun actualizar() {
+            value = (todosAlimentados.value == true && todosMedicados.value == true)
+        }
+        addSource(todosAlimentados) { actualizar() }
+        addSource(todosMedicados) { actualizar() }
+    }
+
+
+
 
     // Indica si la limpieza ya ha sido realizada
     private val _cleaningDone = MutableLiveData(false)
@@ -92,7 +113,29 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
             if (FaunaryPrefs.estaAnimalMedicado(getApplication(), recintoCargado.nombre, animal.nombre)) {
                 animal.enfermedades.forEach { it.medicinaDada = true }
             }
+            animal.enfermedades.forEach { enfermedad ->
+                val diasRestantes = FaunaryPrefs.obtenerDiasHastaProximaMedicina(
+                    getApplication(),
+                    animal.nombre,
+                    enfermedad.nombre
+                ) ?: enfermedad.diasHastaProximaMedicina
+
+                enfermedad.diasHastaProximaMedicina = diasRestantes
+            }
+
         }
+
+        // Contadores solo para animales que deben comer hoy
+        val animalesParaComer = recintoCargado.animales.filter { it.diasHastaProximaComida == 0 }
+        _fedCount.value = animalesParaComer.count { !it.hambre }
+        (totalCount as MutableLiveData).value = animalesParaComer.size
+
+        // Contadores solo para animales que deben medicarse hoy
+        val animalesParaMedicar = recintoCargado.animales.filter { it.debeSerMedicadoHoy() }
+        (sickCount as MutableLiveData).value = animalesParaMedicar.size
+        (medicatedCount as MutableLiveData).value =
+            animalesParaMedicar.count { !it.necesitaMedicina() }
+
 
     }
 
@@ -127,6 +170,7 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
 
     fun alimentarAnimal(animal: Animal) {
         animal.hambre = false
+        animal.diasHastaProximaComida = animal.frecuenciaComida
         _fedCount.value = _recinto.value?.animales?.count { !it.hambre }
 
         // Guardar estado de alimentación
@@ -138,25 +182,79 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
 
     fun medicarAnimal(animal: Animal) {
         animal.medicar()
-        _recinto.value = _recinto.value
 
-        _recinto.value?.let {
-            FaunaryPrefs.guardarAnimalMedicado(getApplication(), it.nombre, animal.nombre)
+        // Guardar cambios de todas las enfermedades medicadas
+        _recinto.value?.let { recinto ->
+            animal.enfermedades.forEach {
+                if (!it.superada && it.medicinaDada) {
+                    FaunaryPrefs.guardarAnimalMedicado(getApplication(), recinto.nombre, animal.nombre)
+                    FaunaryPrefs.guardarDiasHastaProximaMedicina(
+                        getApplication(),
+                        animal.nombre,
+                        it.nombre,
+                        it.diasHastaProximaMedicina
+                    )
+                }
+            }
         }
 
+        // Actualizar el contador de medicados en UI
         (medicatedCount as MutableLiveData).value =
             _recinto.value?.animales?.count { it.estaEnfermo() && !it.necesitaMedicina() } ?: 0
+
+        _recinto.value = _recinto.value // Forzar recomposición de la UI
     }
+
 
 
     private val _actualizarUI = MutableLiveData<Boolean>()
     val actualizarUI: LiveData<Boolean> get() = _actualizarUI
 
     fun forzarActualizacion() {
-        _recinto.value = _recinto.value // esto dispara los observers
-        _actualizarUI.value = true
+        _recinto.value?.let { recinto ->
+            val nombre = recinto.nombre
+
+            // Restaurar valores desde SharedPreferences
+            recinto.limpiezaHecha = FaunaryPrefs.obtenerEstadoLimpieza(getApplication(), nombre)
+            recinto.diasEntreLimpiezas = FaunaryPrefs.obtenerDiasParaLimpieza(getApplication(), nombre)
+                ?: recinto.diasEntreLimpiezasOriginal
+
+            recinto.animales.forEach { animal ->
+                animal.hambre = !FaunaryPrefs.estaAnimalAlimentado(getApplication(), nombre, animal.nombre)
+
+                if (FaunaryPrefs.estaAnimalMedicado(getApplication(), nombre, animal.nombre)) {
+                    animal.enfermedades.forEach { it.medicinaDada = true }
+                }
+                animal.enfermedades.forEach { enfermedad ->
+                    val diasRestantes = FaunaryPrefs.obtenerDiasHastaProximaMedicina(
+                        getApplication(),
+                        animal.nombre,
+                        enfermedad.nombre
+                    )
+                    if (diasRestantes != null) {
+                        enfermedad.diasHastaProximaMedicina = diasRestantes
+                    }
+                }
+            }
+
+            // Recalcular SOLO animales que deben comer hoy
+            val animalesParaComer = recinto.animales.filter { it.diasHastaProximaComida == 0 }
+            _fedCount.value = animalesParaComer.count { !it.hambre }
+            (totalCount as MutableLiveData).value = animalesParaComer.size
+
+            // Solo animales con enfermedades activas que deben medicarse hoy
+            val animalesParaMedicar = recinto.animales.filter { it.debeSerMedicadoHoy() }
+            (medicatedCount as MutableLiveData).value = animalesParaMedicar.count { !it.necesitaMedicina() }
+            (sickCount as MutableLiveData).value = animalesParaMedicar.size
+
+        }
+
+        _recinto.value = _recinto.value
+        _cleaningDone.value = _recinto.value?.limpiezaHecha
         actualizarCleaningLabel()
+        _actualizarUI.value = true
     }
+
 
 
     private fun actualizarCleaningLabel() {

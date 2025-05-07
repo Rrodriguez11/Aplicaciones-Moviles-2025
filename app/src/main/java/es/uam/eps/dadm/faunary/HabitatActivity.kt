@@ -56,6 +56,8 @@ class HabitatActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.forzarActualizacion()
+        binding.invalidateAll()
         Timber.i("onResume called")
     }
 

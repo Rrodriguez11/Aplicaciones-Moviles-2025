@@ -25,11 +25,11 @@
             android:gravity="center_vertical">
 
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/ic_animal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_animal" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/animals_title"
-                    android:textSize="32sp"
+                    android:textSize="30sp"
                     android:textColor="@color/fau_brown"
                     android:fontFamily="@font/carter_one" />
 
@@ -59,9 +59,10 @@
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/ic_cross"
                 android:paddingRight="6dp"
-                android:paddingBottom="3dp"/>
+                android:paddingBottom="3dp"
+                android:src='@{viewModel.animalesEnBuenEstado ? @drawable/ic_check : @drawable/ic_cross}'/>
+
         </LinearLayout>
 
         <!-- Línea vertical con iconos a la derecha -->
@@ -122,18 +123,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{String.format(@string/fed_animals, viewModel.fedCount, viewModel.totalCount)}"
-                    android:textColor="@android:color/holo_red_dark"
+                    android:textColor="@{viewModel.todosAlimentados ? @color/fau_brown : @android:color/holo_red_dark}"
                     android:textSize="18sp"
-                    android:fontFamily="@font/carter_one"/>
+                    android:fontFamily="@font/carter_one" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{String.format(@string/medicated_animals, viewModel.medicatedCount, viewModel.sickCount)}"
-                    android:textColor="@color/fau_brown"
+                    android:textColor="@{viewModel.todosMedicados ? @color/fau_brown : @android:color/holo_red_dark}"
                     android:textSize="18sp"
                     android:fontFamily="@font/carter_one"
-                    android:layout_marginTop="6dp"/>
+                    android:layout_marginTop="6dp" />
+
             </LinearLayout>
         </LinearLayout>
 
