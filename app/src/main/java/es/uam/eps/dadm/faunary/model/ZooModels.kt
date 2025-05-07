@@ -6,7 +6,8 @@ data class Enfermedad(
     val nombre: String,
     val fecha: String,
     var superada: Boolean,
-    var medicinaDada: Boolean
+    var medicinaDada: Boolean,
+    var diasParaMedicar: Int = 3
 ) : Serializable
 
 data class Animal(
@@ -16,6 +17,7 @@ data class Animal(
     var peso: Double,
     var hambre: Boolean = true,
     var alimento: String = "Carne",
+    var diasParaComer: Int = 2,
     var enfermedades: MutableList<Enfermedad> = mutableListOf()
 ) : Serializable {
     fun estaEnfermo(): Boolean = enfermedades.any { !it.superada }
@@ -40,7 +42,9 @@ data class Recinto(
     val nombre: String,
     val tipo: String,
     val capacidad: Int,
-    val diasEntreLimpiezas: Int,
+    var diasEntreLimpiezas: Int,
+    val diasEntreLimpiezasOriginal: Int = diasEntreLimpiezas,
+
     var limpiezaHecha: Boolean = false,
     val animales: MutableList<Animal> = mutableListOf()
 ) {

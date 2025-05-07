@@ -41,5 +41,18 @@ object FaunaryPrefs {
         return getPrefs(context).getBoolean("${recinto}_${animal}_medicado", false)
     }
 
+    fun guardarDiasParaLimpieza(context: Context, nombreRecinto: String, dias: Int) {
+        val prefs = context.getSharedPreferences("faunary_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putInt("limpieza_dias_$nombreRecinto", dias).apply()
+    }
+
+    fun obtenerDiasParaLimpieza(context: Context, nombreRecinto: String): Int? {
+        val prefs = context.getSharedPreferences("faunary_prefs", Context.MODE_PRIVATE)
+        return if (prefs.contains("limpieza_dias_$nombreRecinto")) {
+            prefs.getInt("limpieza_dias_$nombreRecinto", 0)
+        } else null
+    }
+
+
 
 }

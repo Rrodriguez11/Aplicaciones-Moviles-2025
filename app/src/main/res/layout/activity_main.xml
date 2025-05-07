@@ -107,6 +107,23 @@
                     android:backgroundTint="@color/fau_brown"
                     />
 
+                <Button
+                    android:id="@+id/advanceDayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DEBUG: Avanzar un día"
+                    android:textSize="18sp"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"/>
+
+                <Button
+                    android:id="@+id/advanceDayButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DEBUG: Reiniciar todo"
+                    android:textSize="18sp"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
         </ScrollView>

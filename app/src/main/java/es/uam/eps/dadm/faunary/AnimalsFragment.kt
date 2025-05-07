@@ -72,6 +72,11 @@ class AnimalsFragment : Fragment() {
                 binding.recyclerView.adapter = adapter
             }
         }
+
+        viewModel.actualizarUI.observe(viewLifecycleOwner) {
+            binding.recyclerView.adapter?.notifyDataSetChanged()
+        }
+
     }
 
 }

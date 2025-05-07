@@ -39,5 +39,11 @@ class CleaningFragment : Fragment() {
                 viewModel.resetCleaningToast()
             }
         }
+
+        viewModel.actualizarUI.observe(viewLifecycleOwner) {
+            // Forzamos actualización visual del texto y el botón
+            binding.invalidateAll()
+        }
     }
+
 }

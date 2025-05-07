@@ -9,6 +9,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import es.uam.eps.dadm.faunary.databinding.ActivityMainBinding
 import android.widget.Toast
+import android.widget.Button
+import androidx.lifecycle.ViewModelProvider
+import es.uam.eps.dadm.faunary.data.DataRepository
+
 
 
 /**
@@ -48,6 +52,38 @@ class MainActivity : AppCompatActivity() {
             // De momento mostramos un mensaje
             Toast.makeText(this, "Sección de Almacén no disponible aún", Toast.LENGTH_SHORT).show()
         }
+
+        // Botón Debug para cambiar de día por el testeo.
+        findViewById<Button>(R.id.advanceDayButton).setOnClickListener {
+            DataRepository.actualizarEstadoDiario(applicationContext)
+
+            val prefs = getSharedPreferences("faunary_prefs", MODE_PRIVATE)
+            prefs.edit().remove("last_update_date").apply()
+
+            Toast.makeText(this, "¡Simulado paso de un día!", Toast.LENGTH_SHORT).show()
+
+            // Intentar notificar al ViewModel si estamos en un Habitat (opcional)
+            val viewModel = try {
+                ViewModelProvider(this)[es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel::class.java]
+            } catch (_: Exception) {
+                null
+            }
+
+            viewModel?.forzarActualizacion()
+        }
+
+
+
+        findViewById<Button>(R.id.advanceDayButton2).setOnClickListener {
+            es.uam.eps.dadm.faunary.data.DataRepository.reiniciarDatosParaTest()
+
+            val prefs = getSharedPreferences("faunary_prefs", MODE_PRIVATE)
+            prefs.edit().clear().apply()
+
+            Toast.makeText(this, "TODO reiniciado para test", Toast.LENGTH_SHORT).show()
+        }
+
+
 
     }
 }

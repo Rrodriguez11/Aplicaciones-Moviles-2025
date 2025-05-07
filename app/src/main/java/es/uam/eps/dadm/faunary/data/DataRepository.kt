@@ -3,6 +3,10 @@ package es.uam.eps.dadm.faunary.data
 import es.uam.eps.dadm.faunary.model.Animal
 import es.uam.eps.dadm.faunary.model.Enfermedad
 import es.uam.eps.dadm.faunary.model.Recinto
+import es.uam.eps.dadm.faunary.FaunaryPrefs
+import android.content.Context
+
+
 
 object DataRepository {
 
@@ -66,4 +70,57 @@ object DataRepository {
     }
 
     fun getTodosLosRecintos(): List<Recinto> = habitats
+
+    fun actualizarEstadoDiario(context: Context) {
+        habitats.forEach { recinto ->
+            if (!recinto.limpiezaHecha) {
+                recinto.diasEntreLimpiezas -= 1
+            } else {
+                recinto.diasEntreLimpiezas = recinto.diasEntreLimpiezasOriginal
+                recinto.limpiezaHecha = false
+            }
+
+            // Guardar el nuevo valor
+            FaunaryPrefs.guardarDiasParaLimpieza(context, recinto.nombre, recinto.diasEntreLimpiezas)
+
+
+            // ANIMALES
+            recinto.animales.forEach { animal ->
+                animal.diasParaComer -= 1
+                if (animal.diasParaComer <= 0) {
+                    animal.hambre = true
+                    animal.diasParaComer = 2 // reinicia al valor base
+                }
+
+                // ENFERMEDADES
+                animal.enfermedades.forEach { enfermedad ->
+                    enfermedad.diasParaMedicar -= 1
+                    if (enfermedad.diasParaMedicar <= 0) {
+                        enfermedad.medicinaDada = false
+                        enfermedad.diasParaMedicar = 3 // reinicia al valor base
+                    }
+                }
+            }
+        }
+    }
+
+    fun reiniciarDatosParaTest() {
+        habitats.forEach { recinto ->
+            recinto.limpiezaHecha = false
+            recinto.diasEntreLimpiezas = 0
+
+            recinto.animales.forEach { animal ->
+                animal.hambre = true
+                animal.diasParaComer = 0
+
+                animal.enfermedades.forEach { enfermedad ->
+                    enfermedad.medicinaDada = false
+                    enfermedad.diasParaMedicar = 0
+                }
+            }
+        }
+    }
+
+
+
 }

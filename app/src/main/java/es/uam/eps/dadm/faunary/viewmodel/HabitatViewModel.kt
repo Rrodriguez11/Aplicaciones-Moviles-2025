@@ -12,6 +12,7 @@ import timber.log.Timber
 import es.uam.eps.dadm.faunary.data.DataRepository
 
 
+
 /**
  * ViewModel asociado a la pantalla del hábitat.
  * Se encarga de almacenar y gestionar el estado relacionado con la limpieza,
@@ -50,7 +51,9 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
     // Frecuencia de limpieza (en días)
     val cleanFrequency = MutableLiveData<Int>(4)
     // Texto que indica cuándo es la próxima limpieza, cambia según el estado
-    val cleaningLabel = MutableLiveData<String>()
+    private val _cleaningLabel = MutableLiveData<String>()
+    val cleaningLabel: LiveData<String> get() = _cleaningLabel
+
 
     // Indica si la limpieza ya ha sido realizada
     private val _cleaningDone = MutableLiveData(false)
@@ -68,13 +71,18 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
         // Restaurar si ya había sido limpiado
         recintoCargado.limpiezaHecha = FaunaryPrefs.obtenerEstadoLimpieza(getApplication(), recintoCargado.nombre)
 
+        FaunaryPrefs.obtenerDiasParaLimpieza(getApplication(), recintoCargado.nombre)?.let {
+            recintoCargado.diasEntreLimpiezas = it
+        }
+
         // Asignar al LiveData
         _recinto.value = recintoCargado
 
         // Actualizar LiveData de limpieza
         _cleaningDone.value = recintoCargado.limpiezaHecha
+        actualizarCleaningLabel()
 
-        updateCleaningLabel()
+
         Timber.i("HabitatViewModel creado con limpieza restaurada: ${recintoCargado.limpiezaHecha}")
 
         recintoCargado.animales.forEach { animal ->
@@ -90,34 +98,24 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
 
 
     /**
-     * Actualiza el texto `cleaningLabel` según si la limpieza está hecha o no.
-     */
-    private fun updateCleaningLabel() {
-        val done = cleaningDone.value ?: false
-        val context = getApplication<Application>()
-        val text = if (done) {
-            context.getString(es.uam.eps.dadm.faunary.R.string.clean_next, cleanFrequency.value)
-        } else {
-            context.getString(es.uam.eps.dadm.faunary.R.string.clean_delay, cleanDelayDays.value)
-        }
-        cleaningLabel.value = text
-    }
-
-    /**
      * Marca la limpieza como realizada, lanza el evento del Toast y actualiza el estado.
      */
     fun markCleaningDone() {
         _cleaningDone.value = true
 
-        // Guardar el estado en SharedPreferences
-        _recinto.value?.let {
-            FaunaryPrefs.guardarEstadoLimpieza(getApplication(), it.nombre, true)
+        _recinto.value?.let { recinto ->
+            recinto.limpiezaHecha = true
+            recinto.diasEntreLimpiezas = recinto.diasEntreLimpiezasOriginal
+            FaunaryPrefs.guardarEstadoLimpieza(getApplication(), recinto.nombre, true)
         }
 
+        actualizarCleaningLabel()
+
         _showCleaningToast.value = true
-        updateCleaningLabel()
         Timber.i("Habitat was cleaned successfully (estado guardado)")
     }
+
+
 
 
     /**
@@ -149,6 +147,35 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
         (medicatedCount as MutableLiveData).value =
             _recinto.value?.animales?.count { it.estaEnfermo() && !it.necesitaMedicina() } ?: 0
     }
+
+
+    private val _actualizarUI = MutableLiveData<Boolean>()
+    val actualizarUI: LiveData<Boolean> get() = _actualizarUI
+
+    fun forzarActualizacion() {
+        _recinto.value = _recinto.value // esto dispara los observers
+        _actualizarUI.value = true
+        actualizarCleaningLabel()
+    }
+
+
+    private fun actualizarCleaningLabel() {
+        val recintoActual = _recinto.value ?: return
+        val context = getApplication<Application>()
+
+        // Asegurar que nunca mostramos días negativos
+        val dias = recintoActual.diasEntreLimpiezas.coerceAtLeast(0)
+
+        val texto = if (recintoActual.limpiezaHecha) {
+            context.getString(es.uam.eps.dadm.faunary.R.string.clean_next, dias)
+        } else {
+            context.getString(es.uam.eps.dadm.faunary.R.string.clean_delay, dias)
+        }
+
+        _cleaningLabel.value = texto
+    }
+
+
 
 
 }
