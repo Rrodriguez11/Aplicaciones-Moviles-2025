@@ -26,5 +26,6 @@ data class AnimalEntity(
     val peso: Double,
     val hambre: Boolean = true,
     val alimento: String,
-    val diasParaComer: Int = 2
+    val diasParaComer: Int = 2,
+    val enfermo: Boolean = false
 )

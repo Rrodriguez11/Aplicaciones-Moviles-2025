@@ -21,13 +21,13 @@ class FaunaryApplication : Application() {
         Timber.plant(Timber.DebugTree())
 
 
-        // deleteDatabase("zoo_database")
+        deleteDatabase("zoo_database")
 
         // Forzar creación de base de datos
         val db = ZooDatabase.getDatabase(this)
         Timber.i("Base de datos accedida: ${db.openHelper.databaseName}")
 
-        // Insertar habitat de prueba si está vacía
+        // Insertar datos iniciales
         CoroutineScope(Dispatchers.IO).launch {
             val habitatDao = db.habitatDao()
             val animalDao = db.animalDao()

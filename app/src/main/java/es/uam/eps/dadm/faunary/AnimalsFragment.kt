@@ -38,39 +38,37 @@ class AnimalsFragment : Fragment() {
             requireActivity().findViewById<View>(R.id.cleaningFragmentContainer)?.visibility = View.VISIBLE
         }
 
-        viewModel.recinto.observe(viewLifecycleOwner) { recinto ->
-            Log.d("AnimalsFragment", "Recinto observado: ${recinto?.nombre ?: "null"}")
+        viewModel.animales.observe(viewLifecycleOwner) { listaAnimales ->
+            Log.d("AnimalsFragment", "Animales observados: ${listaAnimales.size}")
 
-            if (recinto != null) {
-                val adapter = AnimalAdapter(
-                    recinto.animales,
-                    onFeedClick = { animal ->
-                        viewModel.alimentarAnimal(animal)
-                        binding.recyclerView.adapter?.notifyDataSetChanged()
-                    },
-                    onDetailsClick = { animal ->
-                        val fragment = AnimalDetailFragment()
-                        val args = Bundle().apply {
-                            putSerializable(AnimalDetailFragment.ANIMAL_KEY, animal)
-                        }
-                        fragment.arguments = args
-
-                        requireActivity().findViewById<View>(R.id.cleaningFragmentContainer)?.visibility = View.GONE
-
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.animalFragmentContainer, fragment)
-                            .addToBackStack(null)
-                            .commit()
-                    },
-                    onMedicateClick = { animal ->
-                        viewModel.medicarAnimal(animal)
-                        binding.recyclerView.adapter?.notifyDataSetChanged()
+            val adapter = AnimalAdapter(
+                listaAnimales,
+                onFeedClick = { animal ->
+                    viewModel.alimentarAnimal(animal)
+                    binding.recyclerView.adapter?.notifyDataSetChanged()
+                },
+                onDetailsClick = { animal ->
+                    val fragment = AnimalDetailFragment()
+                    val args = Bundle().apply {
+                        putSerializable(AnimalDetailFragment.ANIMAL_KEY, animal)
                     }
-                )
+                    fragment.arguments = args
 
-                binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                binding.recyclerView.adapter = adapter
-            }
+                    requireActivity().findViewById<View>(R.id.cleaningFragmentContainer)?.visibility = View.GONE
+
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.animalFragmentContainer, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                },
+                onMedicateClick = { animal ->
+                    viewModel.medicarAnimal(animal)
+                    binding.recyclerView.adapter?.notifyDataSetChanged()
+                }
+            )
+
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerView.adapter = adapter
         }
 
         viewModel.actualizarUI.observe(viewLifecycleOwner) {

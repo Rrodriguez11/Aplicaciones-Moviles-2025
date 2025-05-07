@@ -4,22 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import es.uam.eps.dadm.faunary.databinding.ItemAnimalBinding
-import es.uam.eps.dadm.faunary.model.Animal
+import es.uam.eps.dadm.faunary.database.AnimalEntity
 
 class AnimalAdapter(
-    private val animales: List<Animal>,
-    private val onFeedClick: (Animal) -> Unit,
-    private val onDetailsClick: (Animal) -> Unit,
-    private val onMedicateClick: (Animal) -> Unit
+    private val animales: List<AnimalEntity>,
+    private val onFeedClick: (AnimalEntity) -> Unit,
+    private val onDetailsClick: (AnimalEntity) -> Unit,
+    private val onMedicateClick: (AnimalEntity) -> Unit
 ) : RecyclerView.Adapter<AnimalAdapter.AnimalViewHolder>() {
 
     class AnimalViewHolder(val binding: ItemAnimalBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            animal: Animal,
-            onFeedClick: (Animal) -> Unit,
-            onDetailsClick: (Animal) -> Unit,
-            onMedicateClick: (Animal) -> Unit
+            animal: AnimalEntity,
+            onFeedClick: (AnimalEntity) -> Unit,
+            onDetailsClick: (AnimalEntity) -> Unit,
+            onMedicateClick: (AnimalEntity) -> Unit
         ) {
             binding.animal = animal
             binding.executePendingBindings()
@@ -34,9 +34,9 @@ class AnimalAdapter(
                 onDetailsClick(animal)
             }
 
-            binding.medicateButton.setOnClickListener {
-                onMedicateClick(animal)
-            }
+            //binding.medicateButton.setOnClickListener {
+                //onMedicateClick(animal)
+            //}
         }
     }
 

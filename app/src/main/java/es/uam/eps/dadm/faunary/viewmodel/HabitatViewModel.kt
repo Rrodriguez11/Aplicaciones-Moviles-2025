@@ -11,6 +11,7 @@ import es.uam.eps.dadm.faunary.data.DataRepository
 import es.uam.eps.dadm.faunary.database.ZooDatabase
 import es.uam.eps.dadm.faunary.database.AnimalEntity
 import es.uam.eps.dadm.faunary.database.HabitatEntity
+import kotlinx.coroutines.launch
 
 
 /**
@@ -19,7 +20,7 @@ import es.uam.eps.dadm.faunary.database.HabitatEntity
  * alimentación y medicación de los animales.
  * Utiliza LiveData para actualizar automáticamente la interfaz.
  */
-class HabitatViewModel(application: Application, habitatId: Long) : AndroidViewModel(application) {
+class HabitatViewModel(application: Application, private val habitatId: Long) : AndroidViewModel(application) {
 
     private val habitatDao = ZooDatabase.getDatabase(application).habitatDao()
     private val animalDao = ZooDatabase.getDatabase(application).animalDao()
@@ -29,82 +30,31 @@ class HabitatViewModel(application: Application, habitatId: Long) : AndroidViewM
         emit(result)
     }
 
+    val animales: LiveData<List<AnimalEntity>> = animalDao.getAnimalesPorHabitat(habitatId)
 
     val habitatName2 = "Sabana" // para que funcione de momento, ahora lo quito
     val habitatName: LiveData<String?> = habitat.map { it?.nombre }
 
-    // Creamos un recinto de ejemplo con algunos animales
-    private val _recinto = MutableLiveData<Recinto>().apply {
-        value = DataRepository.getRecintoByNombre(habitatName2)
-        requireNotNull(value) { "Recinto no encontrado: $habitatName2" }
-    }
-
-    val recinto: LiveData<Recinto> get() = _recinto
-
-    private val _fedCount = MutableLiveData(
-        _recinto.value?.animales?.count { !it.hambre } ?: 0
-    )
-    val fedCount: LiveData<Int> get() = _fedCount
-
-    val totalCount: LiveData<Int> = MutableLiveData(
-        _recinto.value?.animales?.size ?: 0
-    )
-
-
-    val sickCount: LiveData<Int> = MutableLiveData(
-        _recinto.value?.animales?.count { it.estaEnfermo() } ?: 0
-    )
-    val medicatedCount: LiveData<Int> = MutableLiveData(
-        _recinto.value?.animales?.count { it.estaEnfermo() && !it.necesitaMedicina() } ?: 0
-    )
-
-    // Días que faltan para realizar la limpieza (si aún no se ha hecho)
-    val cleanDelayDays = MutableLiveData<Int>(2)
-    // Frecuencia de limpieza (en días)
-    val cleanFrequency = MutableLiveData<Int>(4)
-    // Texto que indica cuándo es la próxima limpieza, cambia según el estado
-    private val _cleaningLabel = MutableLiveData<String>()
-    val cleaningLabel: LiveData<String> get() = _cleaningLabel
-
+    val fedCount: LiveData<Int> = animales.map { it.count { a -> !a.hambre } }
+    val totalCount: LiveData<Int> = animales.map { it.size }
+    //val sickCount: LiveData<Int> = animales.map { it.count { a -> a.enfermo } }
+    //val medicatedCount: LiveData<Int> = animales.map { it.count { a -> a.enfermo && !a.necesitaMedicina } }
+    val sickCount: LiveData<Int> = animales.map { it.count { a -> a.enfermo } }
+    val medicatedCount: LiveData<Int> = animales.map { it.count { a -> a.enfermo} }
 
     // Indica si la limpieza ya ha sido realizada
-    private val _cleaningDone = MutableLiveData(false)
-    val cleaningDone: LiveData<Boolean> get() = _cleaningDone
-
+    val cleaningDone: MutableLiveData<Boolean> = MutableLiveData(false)
+    val cleaningLabel: MutableLiveData<String> = MutableLiveData()
     // Evento para mostrar un Toast tras realizar la limpieza
-    private val _showCleaningToast = MutableLiveData<Boolean>()
-    val showCleaningToast: LiveData<Boolean> get() = _showCleaningToast
+    val showCleaningToast: MutableLiveData<Boolean> = MutableLiveData(false)
 
     init {
-        Timber.i("habitatId: ${habitatId} (${habitatName})")
-        // Cargar el recinto desde el repositorio
-        val recintoCargado = DataRepository.getRecintoByNombre(habitatName2)
-        requireNotNull(recintoCargado) { "Recinto no encontrado: $habitatName" }
+        Timber.i("HabitatViewModel creado con id = $habitatId")
 
-        // Restaurar si ya había sido limpiado
-        recintoCargado.limpiezaHecha = FaunaryPrefs.obtenerEstadoLimpieza(getApplication(), recintoCargado.nombre)
-
-        FaunaryPrefs.obtenerDiasParaLimpieza(getApplication(), recintoCargado.nombre)?.let {
-            recintoCargado.diasEntreLimpiezas = it
-        }
-
-        // Asignar al LiveData
-        _recinto.value = recintoCargado
-
-        // Actualizar LiveData de limpieza
-        _cleaningDone.value = recintoCargado.limpiezaHecha
-        actualizarCleaningLabel()
-
-
-        Timber.i("HabitatViewModel creado con limpieza restaurada: ${recintoCargado.limpiezaHecha}")
-
-        recintoCargado.animales.forEach { animal ->
-            val alimentado = FaunaryPrefs.estaAnimalAlimentado(getApplication(), recintoCargado.nombre, animal.nombre)
-            animal.hambre = !alimentado
-
-            if (FaunaryPrefs.estaAnimalMedicado(getApplication(), recintoCargado.nombre, animal.nombre)) {
-                animal.enfermedades.forEach { it.medicinaDada = true }
-            }
+        viewModelScope.launch {
+            val h = habitatDao.getHabitatPorId(habitatId)
+            cleaningDone.postValue(h?.limpiezaHecha ?: false)
+            actualizarCleaningLabel()
         }
 
     }
@@ -114,18 +64,15 @@ class HabitatViewModel(application: Application, habitatId: Long) : AndroidViewM
      * Marca la limpieza como realizada, lanza el evento del Toast y actualiza el estado.
      */
     fun markCleaningDone() {
-        _cleaningDone.value = true
+        viewModelScope.launch {
+            habitatDao.markCleaningDone(habitatId)
+            cleaningDone.value = true
 
-        _recinto.value?.let { recinto ->
-            recinto.limpiezaHecha = true
-            recinto.diasEntreLimpiezas = recinto.diasEntreLimpiezasOriginal
-            FaunaryPrefs.guardarEstadoLimpieza(getApplication(), recinto.nombre, true)
+            actualizarCleaningLabel()
+            showCleaningToast.value = true
+            Timber.i("Habitat was cleaned successfully (estado guardado)")
         }
 
-        actualizarCleaningLabel()
-
-        _showCleaningToast.value = true
-        Timber.i("Habitat was cleaned successfully (estado guardado)")
     }
 
 
@@ -135,30 +82,16 @@ class HabitatViewModel(application: Application, habitatId: Long) : AndroidViewM
      * Reinicia el evento del Toast tras mostrarlo una vez.
      */
     fun resetCleaningToast() {
-        _showCleaningToast.value = false
+        showCleaningToast.value = false
     }
 
     fun alimentarAnimal(animal: Animal) {
         animal.hambre = false
-        _fedCount.value = _recinto.value?.animales?.count { !it.hambre }
-
-        // Guardar estado de alimentación
-        _recinto.value?.let {
-            FaunaryPrefs.guardarAnimalAlimentado(getApplication(), it.nombre, animal.nombre, true)
-        }
     }
 
 
     fun medicarAnimal(animal: Animal) {
         animal.medicar()
-        _recinto.value = _recinto.value
-
-        _recinto.value?.let {
-            FaunaryPrefs.guardarAnimalMedicado(getApplication(), it.nombre, animal.nombre)
-        }
-
-        (medicatedCount as MutableLiveData).value =
-            _recinto.value?.animales?.count { it.estaEnfermo() && !it.necesitaMedicina() } ?: 0
     }
 
 
@@ -166,26 +99,13 @@ class HabitatViewModel(application: Application, habitatId: Long) : AndroidViewM
     val actualizarUI: LiveData<Boolean> get() = _actualizarUI
 
     fun forzarActualizacion() {
-        _recinto.value = _recinto.value // esto dispara los observers
         _actualizarUI.value = true
         actualizarCleaningLabel()
     }
 
 
     private fun actualizarCleaningLabel() {
-        val recintoActual = _recinto.value ?: return
-        val context = getApplication<Application>()
-
-        // Asegurar que nunca mostramos días negativos
-        val dias = recintoActual.diasEntreLimpiezas.coerceAtLeast(0)
-
-        val texto = if (recintoActual.limpiezaHecha) {
-            context.getString(es.uam.eps.dadm.faunary.R.string.clean_next, dias)
-        } else {
-            context.getString(es.uam.eps.dadm.faunary.R.string.clean_delay, dias)
-        }
-
-        _cleaningLabel.value = texto
+        cleaningLabel.value = "A"
     }
 
 

@@ -23,4 +23,7 @@ interface HabitatDao {
 
     @Query("SELECT * FROM habitats")
     suspend fun getHabitatsRaw(): List<HabitatEntity>
+
+    @Query("UPDATE habitats SET limpiezaHecha = 1, diasEntreLimpiezas = diasEntreLimpiezasOriginal WHERE id = :habitatId")
+    suspend fun markCleaningDone(habitatId: Long)
 }
