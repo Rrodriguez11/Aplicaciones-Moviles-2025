@@ -37,10 +37,10 @@ class HabitatActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         // Recupera el nombre del hábitat desde el Intent
-        val habitatId = intent.getLongExtra("HABITAT_ID", -1L)
+        val habitatName = intent.getStringExtra("HABITAT_NAME") ?: ""
 
         // Usa el ViewModelFactory para pasar el nombre al ViewModel
-        val factory = es.uam.eps.dadm.faunary.viewmodel.HabitatViewModelFactory(application, habitatId)
+        val factory = es.uam.eps.dadm.faunary.viewmodel.HabitatViewModelFactory(application, habitatName)
         viewModel = ViewModelProvider(this, factory).get(HabitatViewModel::class.java)
 
         binding.viewModel = viewModel

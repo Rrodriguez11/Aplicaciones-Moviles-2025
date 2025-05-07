@@ -21,7 +21,7 @@ class FaunaryApplication : Application() {
         Timber.plant(Timber.DebugTree())
 
 
-        // deleteDatabase("zoo_database")
+        deleteDatabase("zoo_database")
 
         // Forzar creación de base de datos
         val db = ZooDatabase.getDatabase(this)

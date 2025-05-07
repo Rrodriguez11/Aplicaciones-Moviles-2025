@@ -20,7 +20,7 @@ import es.uam.eps.dadm.faunary.data.DataRepository
  * alimentación y medicación de los animales.
  * Utiliza LiveData para actualizar automáticamente la interfaz.
  */
-class HabitatViewModel(application: Application, habitatName: String) : AndroidViewModel(application) {
+class HabitatViewModel(application: Application, val habitatName: String) : AndroidViewModel(application) {
 
     // Creamos un recinto de ejemplo con algunos animales
     private val _recinto = MutableLiveData<Recinto>().apply {
