@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import es.uam.eps.dadm.faunary.FaunaryPrefs
 import es.uam.eps.dadm.faunary.model.Animal
 import es.uam.eps.dadm.faunary.model.Enfermedad
 import es.uam.eps.dadm.faunary.model.Recinto
@@ -60,9 +61,29 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
     val showCleaningToast: LiveData<Boolean> get() = _showCleaningToast
 
     init {
+        // Cargar el recinto desde el repositorio
+        val recintoCargado = DataRepository.getRecintoByNombre(habitatName)
+        requireNotNull(recintoCargado) { "Recinto no encontrado: $habitatName" }
+
+        // Restaurar si ya había sido limpiado
+        recintoCargado.limpiezaHecha = FaunaryPrefs.obtenerEstadoLimpieza(getApplication(), recintoCargado.nombre)
+
+        // Asignar al LiveData
+        _recinto.value = recintoCargado
+
+        // Actualizar LiveData de limpieza
+        _cleaningDone.value = recintoCargado.limpiezaHecha
+
         updateCleaningLabel()
-        Timber.i("HabitatViewModel created")
+        Timber.i("HabitatViewModel creado con limpieza restaurada: ${recintoCargado.limpiezaHecha}")
+
+        recintoCargado.animales.forEach { animal ->
+            val alimentado = FaunaryPrefs.estaAnimalAlimentado(getApplication(), recintoCargado.nombre, animal.nombre)
+            animal.hambre = !alimentado
+        }
+
     }
+
 
     /**
      * Actualiza el texto `cleaningLabel` según si la limpieza está hecha o no.
@@ -83,10 +104,17 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
      */
     fun markCleaningDone() {
         _cleaningDone.value = true
+
+        // Guardar el estado en SharedPreferences
+        _recinto.value?.let {
+            FaunaryPrefs.guardarEstadoLimpieza(getApplication(), it.nombre, true)
+        }
+
         _showCleaningToast.value = true
         updateCleaningLabel()
-        Timber.i("Habitat was cleaned successfully")
+        Timber.i("Habitat was cleaned successfully (estado guardado)")
     }
+
 
     /**
      * Reinicia el evento del Toast tras mostrarlo una vez.
@@ -98,7 +126,13 @@ class HabitatViewModel(application: Application, habitatName: String) : AndroidV
     fun alimentarAnimal(animal: Animal) {
         animal.hambre = false
         _fedCount.value = _recinto.value?.animales?.count { !it.hambre }
+
+        // Guardar estado de alimentación
+        _recinto.value?.let {
+            FaunaryPrefs.guardarAnimalAlimentado(getApplication(), it.nombre, animal.nombre, true)
+        }
     }
+
 
     fun medicarAnimal(animal: Animal) {
         animal.medicar()
