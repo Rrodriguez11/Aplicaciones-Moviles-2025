@@ -11,30 +11,34 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
- * Clase de aplicación de Faunary.
- * Se ejecuta al iniciar la app, antes que cualquier actividad.
+ * Clase base de la aplicación Faunary.
+ * Se ejecuta una vez al inicio antes que cualquier actividad o fragmento.
+ * Ideal para inicializaciones globales como la base de datos o librerías externas.
  */
 class FaunaryApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // Inicializa Timber para logs en modo debug
         Timber.plant(Timber.DebugTree())
 
-
+        // (Solo para pruebas) Elimina cualquier base de datos anterior al iniciar
         deleteDatabase("zoo_database")
 
-        // Forzar creación de base de datos
+        // Obtiene una instancia de la base de datos
         val db = ZooDatabase.getDatabase(this)
         Timber.i("Base de datos accedida: ${db.openHelper.databaseName}")
 
-        // Insertar habitat de prueba si está vacía
+        // Inserta datos de prueba si la base está vacía
         CoroutineScope(Dispatchers.IO).launch {
             val habitatDao = db.habitatDao()
             val animalDao = db.animalDao()
 
+            // Si no hay hábitats registrados aún
             if (habitatDao.getHabitatsRaw().isEmpty()) {
 
-                // Sabana
+                // Insertar hábitat "Sabana"
                 val sabanaId = habitatDao.insert(
                     HabitatEntity(
                         nombre = "Sabana",
@@ -44,6 +48,7 @@ class FaunaryApplication : Application() {
                         limpiezaHecha = false
                     )
                 )
+                // Insertar animales en "Sabana"
                 animalDao.insert(
                     AnimalEntity(
                         habitatId = sabanaId,
@@ -67,7 +72,7 @@ class FaunaryApplication : Application() {
                     )
                 )
 
-                // Polar
+                // Insertar hábitat "Polar"
                 val polarId = habitatDao.insert(
                     HabitatEntity(
                         nombre = "Polar",
@@ -77,6 +82,7 @@ class FaunaryApplication : Application() {
                         limpiezaHecha = true
                     )
                 )
+                // Insertar animales en "Polar"
                 animalDao.insert(
                     AnimalEntity(
                         habitatId = polarId,
@@ -104,6 +110,7 @@ class FaunaryApplication : Application() {
             }
         }
 
+        // Verifica si ha pasado un nuevo día para actualizar el estado del zoológico
         if (DateUtils.haPasadoUnDia(this)) {
             DataRepository.actualizarEstadoDiario(this)
             Timber.i("Nuevo día detectado: estado actualizado")

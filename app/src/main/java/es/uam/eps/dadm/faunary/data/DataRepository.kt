@@ -6,8 +6,10 @@ import es.uam.eps.dadm.faunary.model.Animal
 import es.uam.eps.dadm.faunary.model.Enfermedad
 import es.uam.eps.dadm.faunary.model.Recinto
 
+// Objeto singleton que actúa como repositorio de datos de los recintos y animales
 object DataRepository {
 
+    // Lista de recintos inicializados con animales y sus datos
     private val habitats = listOf(
         Recinto(
             nombre = "Sabana",
@@ -85,14 +87,19 @@ object DataRepository {
         )
     )
 
+    // Retorna un recinto por nombre, ignorando mayúsculas/minúsculas
     fun getRecintoByNombre(nombre: String): Recinto? {
         return habitats.find { it.nombre.equals(nombre, ignoreCase = true) }
     }
 
+    // Retorna la lista completa de recintos
     fun getTodosLosRecintos(): List<Recinto> = habitats
 
+    // Actualiza el estado diario de los recintos y los animales, simulando el paso de un día
     fun actualizarEstadoDiario(context: Context) {
         habitats.forEach { recinto ->
+
+            // Lógica de limpieza del recinto
             if (recinto.limpiezaHecha) {
                 recinto.diasEntreLimpiezas -= 1
                 if (recinto.diasEntreLimpiezas <= 0) {
@@ -103,10 +110,13 @@ object DataRepository {
                 recinto.diasEntreLimpiezas += 1
             }
 
+            // Guardar el estado de limpieza en preferencias
             FaunaryPrefs.guardarDiasParaLimpieza(context, recinto.nombre, recinto.diasEntreLimpiezas)
             FaunaryPrefs.guardarEstadoLimpieza(context, recinto.nombre, recinto.limpiezaHecha)
 
             recinto.animales.forEach { animal ->
+
+                // Lógica de alimentación
                 if (animal.hambre) {
                     animal.diasHastaProximaComida = 0
                 } else {
@@ -118,13 +128,14 @@ object DataRepository {
                     }
                 }
 
+                // Lógica de enfermedades
                 animal.enfermedades.forEach { enfermedad ->
                     if (!enfermedad.superada) {
                         if (!enfermedad.medicinaDada) {
-                            // Si aún no ha sido medicado, mantener contador en 0
+                            // No medicado aún: el contador se mantiene en 0
                             enfermedad.diasHastaProximaMedicina = 0
                         } else {
-                            // Reducir contador solo si ya ha sido medicado
+                            // Disminuir el contador si ya se medicó
                             enfermedad.diasHastaProximaMedicina -= 1
 
                             if (enfermedad.diasHastaProximaMedicina <= 0) {
@@ -134,7 +145,7 @@ object DataRepository {
                             }
                         }
 
-                        // Siempre guardar el contador actual (aunque sea 0)
+                        // Guardar el estado actual de la enfermedad
                         FaunaryPrefs.guardarDiasHastaProximaMedicina(
                             context,
                             animal.nombre,
@@ -147,6 +158,7 @@ object DataRepository {
         }
     }
 
+    // Reinicia todos los datos a un estado base para propósitos de testeo
     fun reiniciarDatosParaTest() {
         habitats.forEach { recinto ->
             recinto.limpiezaHecha = false

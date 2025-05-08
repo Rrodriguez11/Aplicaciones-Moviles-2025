@@ -10,7 +10,6 @@ import es.uam.eps.dadm.faunary.viewmodel.HabitatViewModel
 import timber.log.Timber
 import android.util.Log
 
-
 /**
  * Actividad que muestra la vista detallada de un hábitat.
  * Permite visualizar y actualizar el estado de limpieza, alimentación y medicación.
@@ -18,37 +17,38 @@ import android.util.Log
  */
 class HabitatActivity : AppCompatActivity() {
 
-    // Enlace al layout activity_habitat.xml mediante Data Binding
+    // Enlace con el layout XML (activity_habitat.xml) a través de Data Binding
     private lateinit var binding: ActivityHabitatBinding
 
-    // ViewModel que gestiona los datos del hábitat y su lógica
+    // ViewModel que contiene y gestiona la lógica de estado del hábitat
     private lateinit var viewModel: HabitatViewModel
 
     /**
-     * Método llamado al crear la actividad.
-     * Configura el DataBinding, el ViewModel y observa eventos de UI.
+     * Se ejecuta al crear la actividad.
+     * Configura el layout, recupera parámetros del Intent, y vincula el ViewModel.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Extiende el contenido detrás de la barra de estado (opcional visual)
 
-        // Infla el layout usando DataBinding
+        // Carga el layout usando Data Binding y lo vincula al ciclo de vida
         binding = DataBindingUtil.setContentView(this, R.layout.activity_habitat)
         binding.lifecycleOwner = this
 
         // Recupera el nombre del hábitat desde el Intent
         val habitatName = intent.getStringExtra("HABITAT_NAME") ?: ""
 
-        // Usa el ViewModelFactory para pasar el nombre al ViewModel
+        // Crea el ViewModel usando una Factory que recibe el nombre del hábitat
         val factory = es.uam.eps.dadm.faunary.viewmodel.HabitatViewModelFactory(application, habitatName)
         viewModel = ViewModelProvider(this, factory).get(HabitatViewModel::class.java)
 
+        // Vincula el ViewModel al layout
         binding.viewModel = viewModel
-
 
         Timber.i("onCreate called")
     }
 
+    // Métodos del ciclo de vida con logs útiles para depuración o métricas
     override fun onStart() {
         super.onStart()
         Timber.i("onStart called")
@@ -56,8 +56,9 @@ class HabitatActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Refresca los datos del ViewModel cada vez que la actividad entra en primer plano
         viewModel.forzarActualizacion()
-        binding.invalidateAll()
+        binding.invalidateAll() // Fuerza refresco visual del binding
         Timber.i("onResume called")
     }
 

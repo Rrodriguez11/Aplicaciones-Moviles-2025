@@ -7,24 +7,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import es.uam.eps.dadm.faunary.MainActivity
 
+/**
+ * Fragmento que representa el encabezado común de la app.
+ * Contiene botones para navegación rápida: Inicio (Home) y Usuario.
+ */
 class HeaderFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Infla el layout del fragmento (fragment_header.xml)
         val view = inflater.inflate(R.layout.fragment_header, container, false)
 
-        // Botón de ir al inicio
+        // Configura el botón que lleva a la pantalla principal (MainActivity)
         val homeButton = view.findViewById<ImageButton>(R.id.homeButton)
         homeButton.setOnClickListener {
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
         }
 
-        // Botón de usuario
+        // Configura el botón que lleva a la pantalla de usuario (UserActivity)
         val userButton = view.findViewById<ImageButton>(R.id.userButton)
         userButton.setOnClickListener {
             startActivity(Intent(requireContext(), UserActivity::class.java))
